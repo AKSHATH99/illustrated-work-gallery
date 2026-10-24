@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 const cardClass =
-  "group block h-full overflow-hidden rounded-lg border border-border bg-card transition-colors duration-200 hover:border-accent/50";
+  "group block h-full overflow-hidden rounded-lg border border-border transition-colors duration-200 hover:border-accent/50";
 
 export function ProjectCard({ project }: { project: Project }) {
   const thumbnail = projectThumbnails[project.slug];

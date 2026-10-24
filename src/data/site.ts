@@ -6,28 +6,21 @@
  * where personal links and identity live.
  */
 export const site = {
-  name: "Akshath",
+  name: "Akshath P",
   wordmark: "akshath.",
-  role: "Software Engineer",
+  role: "Full-Stack Developer",
   location: "India",
 
-  /**
-   * Set this to a real profile photo path (e.g. a file in /public/images)
-   * to replace the placeholder monogram in the intro. Leave empty to keep
-   * the placeholder — never generate a fake portrait.
-   */
-  photoUrl: "",
+  email: "akshathpkk@gmail.com",
 
-  // TODO: your email address, shown in "Find me around the internet".
-  email: "",
+  githubUrl: "https://github.com/AKSHATH99",
+  githubHandle: "@AKSHATH99",
 
-  // TODO: e.g. "https://github.com/your-username" and your handle.
-  githubUrl: "",
-  githubHandle: "",
+  linkedinUrl: "https://www.linkedin.com/in/akshath-p-519939287/",
+  linkedinHandle: "akshath-p",
 
-  // TODO: e.g. "https://www.linkedin.com/in/your-username" and your handle.
-  linkedinUrl: "",
-  linkedinHandle: "",
+  twitterUrl: "https://twitter.com/AkshathP2",
+  twitterHandle: "@AkshathP2",
 
   // Optional: photography portfolio or photo-sharing profile.
   photographyUrl: "",

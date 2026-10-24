@@ -1,8 +1,9 @@
+import { HeroIllustration } from "@/components/hero/HeroIllustration";
 import { site } from "@/data/site";
 
 /**
- * Intro section. The profile image is a restrained monogram placeholder
- * until a real photo is set in src/data/site.ts (site.photoUrl).
+ * Intro section. The right column is the pixel-art desk the companion sits at,
+ * so the hero and the navigation character are the same one creature.
  */
 export function Intro() {
   return (
@@ -14,9 +15,8 @@ export function Intro() {
             I build software, explore ML, and learn by making things.
           </h1>
           <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-            I'm a software engineer who enjoys building useful products, figuring
-            out how things work under the hood, and exploring machine learning
-            along the way.
+            I'm a software engineer who enjoys building useful products, figuring out how things
+            work under the hood, and exploring machine learning along the way.
           </p>
           <p className="mt-5 font-mono text-[12px] text-muted-foreground">
             {site.role} · {site.location}
@@ -41,22 +41,12 @@ export function Intro() {
           </div>
         </div>
 
-        {site.photoUrl ? (
-          <img
-            src={site.photoUrl}
-            alt={`Portrait of ${site.name}`}
-            width={184}
-            height={184}
-            className="mt-8 h-[168px] w-[168px] shrink-0 rounded-xl border border-border object-cover md:mt-1 md:h-[184px] md:w-[184px]"
-          />
-        ) : (
-          <div
-            aria-hidden="true"
-            className="mt-8 flex h-[168px] w-[168px] shrink-0 items-center justify-center rounded-xl border border-border bg-surface md:mt-1 md:h-[184px] md:w-[184px]"
-          >
-            <span className="text-[26px] font-medium text-muted-foreground/70">a.</span>
-          </div>
-        )}
+        <div className="mt-10 w-fit shrink-0 md:mt-0 md:pt-14">
+          <HeroIllustration />
+          <p className="mt-3 text-right font-mono text-[11px] text-muted-foreground/80">
+            somewhere between code &amp; curiosity
+          </p>
+        </div>
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+import { Briefcase } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { experience } from "@/data/experience";
 
@@ -5,6 +6,7 @@ export function Experience() {
   return (
     <section id="experience" className="scroll-mt-20 border-t border-border py-14 md:py-16">
       <SectionHeading
+        icon={Briefcase}
         title="Where I've been building things."
         intro="Most of what I've learned has come from actually building software, shipping it, and figuring things out when something doesn't work as expected."
       />
@@ -14,6 +16,7 @@ export function Experience() {
           <li key={`${entry.role}-${entry.company}`} className="relative">
             <span
               aria-hidden="true"
+              data-companion-anchor="timeline-dot"
               className="absolute -left-[27.5px] top-[7px] h-[7px] w-[7px] rounded-full border border-border bg-background"
             />
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">

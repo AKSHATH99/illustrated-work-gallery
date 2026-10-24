@@ -1,15 +1,9 @@
 /**
- * Restrained placeholder visuals for project cards, keyed by slug.
- * Replace an entry with a real screenshot path when one exists.
+ * Screenshots for project cards and detail pages, keyed by slug.
+ * A project with no entry here renders as a text-only card.
+ * Images live in /public/images and are referenced from the site root.
  */
-import restaurantOps from "@/assets/projects/restaurant-ops.jpg";
-import resumeMl from "@/assets/projects/resume-ml.jpg";
-import realtimeCollab from "@/assets/projects/realtime-collab.jpg";
-import androidLauncher from "@/assets/projects/android-launcher.jpg";
-
 export const projectThumbnails: Record<string, string> = {
-  "restaurant-operations-dashboard": restaurantOps,
-  "resume-classification-machine-learning": resumeMl,
-  "real-time-collaborative-coding": realtimeCollab,
-  "android-launcher-experiments": androidLauncher,
+  "web3-document-verification": "/images/doc-verify.png",
+  "live-mcq-platform": "/images/mcq-platform.png",
 };

@@ -2,8 +2,7 @@
  * Experience entries, newest first.
  *
  * Don't fabricate dates, employer names, or metrics — leave fields as ""
- * or the array empty and they won't be rendered. Fill them in with real
- * details when ready.
+ * or the array empty and they won't be rendered.
  */
 export interface ExperienceEntry {
   role: string;
@@ -16,22 +15,25 @@ export interface ExperienceEntry {
 export const experience: ExperienceEntry[] = [
   {
     role: "Software Engineer (SDE I)",
-    company: "", // TODO: add your current employer's actual name
-    dateRange: "", // TODO: add the date range
+    company: "Favhiker — Delnie",
+    dateRange: "Nov 2025 — Present",
     description:
-      "I work across the stack, building product features and taking responsibility for the systems that support them, from implementation to deployment and production monitoring.",
+      "I work across the stack on a real product — building scalable web applications with Next.js and NestJS, and staying with features from implementation through to the way they feel in the browser.",
     points: [
-      // TODO: two or three relevant responsibilities or accomplishments.
-      // Emphasize practical engineering, product ownership, debugging, and
-      // technical decision-making. No invented numbers or metrics.
+      "Building scalable web applications with Next.js and NestJS.",
+      "Shipping features, fixing bugs, and improving performance for a product team.",
+      "Refining UI and UX as part of the same cycle, not as an afterthought.",
     ],
   },
   {
     role: "Full-Stack Engineering Intern",
     company: "BookMyPooja",
-    dateRange: "", // TODO: add the date range
+    dateRange: "Dec 2024 — May 2025",
     description:
-      "I spent six months working on full-stack product development, gaining experience with Next.js, NestJS, and the process of turning requirements into working features.",
-    points: [],
+      "Six months of full-stack product development with Next.js and NestJS, learning how requirements actually turn into features that reach users.",
+    points: [
+      "Contributed to web app development with Next.js and NestJS.",
+      "Feature work, debugging, performance, and UI polish that made it into production.",
+    ],
   },
 ];

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { DotBackground } from "@/components/ui/DotBackground";
+import { PixelCompanion } from "@/components/companion/PixelCompanion";
 import { Footer } from "./Footer";
 import { MobileHeader } from "./MobileHeader";
 import { Sidebar } from "./Sidebar";
@@ -23,6 +24,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           <Footer />
         </main>
       </div>
+      <PixelCompanion />
     </div>
   );
 }

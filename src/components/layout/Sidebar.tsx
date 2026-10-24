@@ -31,6 +31,7 @@ export function Sidebar() {
                 <Link
                   to="/"
                   hash={item.id}
+                  data-companion-nav={item.id}
                   className="group flex items-center gap-2.5 rounded-md py-1.5 text-[13.5px] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <span

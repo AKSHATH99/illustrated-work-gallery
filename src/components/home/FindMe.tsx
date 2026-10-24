@@ -1,4 +1,13 @@
-import { ArrowUpRight, Camera, Github, Linkedin, Mail, type LucideIcon } from "lucide-react";
+import {
+  ArrowUpRight,
+  AtSign,
+  Camera,
+  Github,
+  Linkedin,
+  Mail,
+  Twitter,
+  type LucideIcon,
+} from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { site } from "@/data/site";
 
@@ -37,6 +46,13 @@ const socials: SocialLink[] = [
     icon: Mail,
   },
   {
+    name: "Twitter",
+    url: site.twitterUrl,
+    handle: site.twitterHandle,
+    description: "The social side of things.",
+    icon: Twitter,
+  },
+  {
     name: "Photography",
     url: site.photographyUrl,
     handle: "",
@@ -49,6 +65,7 @@ export function FindMe() {
   return (
     <section id="find-me" className="scroll-mt-20 border-t border-border py-14 md:py-16">
       <SectionHeading
+        icon={AtSign}
         title="Find me around the internet."
         intro="If something I've built caught your attention, or you just want to talk about software, ML, or an interesting idea, you can find me in a few places around the internet."
       />
@@ -61,6 +78,7 @@ export function FindMe() {
               href={url}
               target={url.startsWith("mailto:") ? undefined : "_blank"}
               rel="noreferrer"
+              data-companion-anchor="social-card"
               className="group flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-accent/50"
             >
               <span

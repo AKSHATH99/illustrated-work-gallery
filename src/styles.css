@@ -108,3 +108,215 @@
     opacity: 0.35;
   }
 }
+
+/*
+ * Pixel companion — the small monochrome creature that perches on the sidebar
+ * and on section borders. Colours come from the existing theme tokens, so it
+ * needs no separate theme: dark body on light, near-white body on dark.
+ */
+:root {
+  --companion-size: 32px;
+  --companion-body: var(--foreground);
+  --companion-shade: var(--muted-foreground);
+  --companion-eye: var(--background);
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --companion-size: 28px;
+  }
+}
+
+.companion {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 25;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.companion.is-visible {
+  opacity: 1;
+}
+
+/* Appearing and vanishing at a perch is a soft arrival, not a pop. */
+@media (prefers-reduced-motion: no-preference) {
+  .companion {
+    transition: opacity 180ms linear;
+  }
+}
+
+/* Two tracks: one for horizontal travel, one for the vertical arc of a jump. */
+.companion-track {
+  width: 100%;
+  height: 100%;
+}
+
+.companion-body {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  appearance: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.companion-body:focus-visible {
+  outline-offset: 3px;
+}
+
+/* Carries the crouch and the breathing loop; the sprite itself only flips. */
+.companion-pose {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.companion-sprite {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.companion.is-crouch .companion-pose {
+  transform: translateY(2px) scaleY(0.84);
+  transform-origin: bottom center;
+}
+
+.companion-bubble {
+  position: absolute;
+  left: calc(100% + 6px);
+  bottom: calc(100% - 4px);
+  padding: 3px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--surface);
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.companion-bubble.is-below {
+  bottom: auto;
+  top: calc(100% + 2px);
+}
+
+/* Small screens: the remark floats above the character instead of to the side. */
+@media (max-width: 1023px) {
+  .companion-bubble {
+    left: 50%;
+    bottom: calc(100% + 2px);
+    transform: translateX(-50%);
+  }
+
+  .companion-bubble.is-below {
+    bottom: auto;
+    top: calc(100% + 2px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .companion {
+    transition: opacity 260ms ease-out;
+  }
+
+  .companion.is-visible .companion-pose {
+    animation: companion-breathe 3.6s ease-in-out infinite alternate;
+  }
+
+  .companion.is-crouch .companion-pose {
+    animation: none;
+  }
+}
+
+@keyframes companion-breathe {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-1px);
+  }
+}
+
+/*
+ * Hero scene — the pixel-art desk beside the intro. It is seven and a half
+ * sprite-boxes wide, so one scene cell is exactly 1/16 of the companion: the
+ * artwork and the character that sits in it always share one pixel size, at
+ * every breakpoint. Colours are the companion's own tokens, and nothing behind
+ * the scene is filled, so it reads as the page rather than as a framed image.
+ */
+.hero-scene {
+  position: relative;
+  width: calc(var(--companion-size) * 7.5);
+}
+
+.hero-scene-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The perch: the companion's hips rest on this element's top edge. */
+.hero-scene-seat {
+  position: absolute;
+  height: 6px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-scene-cursor {
+    animation: hero-cursor 1.2s linear infinite;
+  }
+
+  .hero-scene-leaf {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: hero-leaf 6s ease-in-out infinite;
+  }
+
+  .hero-scene-steam {
+    animation: hero-steam 7s ease-in-out infinite;
+  }
+}
+
+@keyframes hero-cursor {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-leaf {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  40%,
+  60% {
+    transform: rotate(-8deg);
+  }
+}
+
+@keyframes hero-steam {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  35%,
+  55% {
+    opacity: 0.9;
+  }
+}

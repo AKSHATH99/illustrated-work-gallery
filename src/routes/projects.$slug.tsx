@@ -46,6 +46,7 @@ function ProjectPage() {
   const sections = (
     [
       { title: "The problem", body: project.problem },
+      { title: "Who it's for", body: project.audience },
       { title: "How I approached it", body: project.approach },
       { title: "Technical decisions", body: project.decisions },
       { title: "What I learned", body: project.learned },
@@ -91,7 +92,7 @@ function ProjectPage() {
         {thumbnail ? (
           <img
             src={thumbnail}
-            alt=""
+            alt={`${project.title} — screenshot`}
             width={800}
             height={512}
             className="mt-8 w-full rounded-lg border border-border"

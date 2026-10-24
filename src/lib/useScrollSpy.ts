@@ -18,11 +18,12 @@ export function useScrollSpy(sectionIds: string[]): string | null {
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((entry) => entry.isIntersecting);
-        if (visible.length === 0) return;
-        const topMost = visible.sort(
+        const sorted = visible.sort(
           (a, b) =>
             a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top,
-        )[0];
+        );
+        const topMost = sorted[0];
+        if (!topMost) return;
         setActive(topMost.target.id);
       },
       // A narrow horizontal band around the upper-middle of the viewport.

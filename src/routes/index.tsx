@@ -1,24 +1,41 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { SiteShell } from "@/components/layout/SiteShell";
+import { Intro } from "@/components/home/Intro";
+import { SelectedWork } from "@/components/home/SelectedWork";
+import { Experience } from "@/components/home/Experience";
+import { Exploring } from "@/components/home/Exploring";
+import { FindMe } from "@/components/home/FindMe";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Akshath — Software Engineer" },
+      {
+        name: "description",
+        content:
+          "I'm a software engineer who enjoys building useful products, figuring out how things work under the hood, and exploring machine learning along the way.",
+      },
+      { property: "og:title", content: "Akshath — Software Engineer" },
+      {
+        property: "og:description",
+        content:
+          "I'm a software engineer who enjoys building useful products, figuring out how things work under the hood, and exploring machine learning along the way.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <SiteShell>
+      <Intro />
+      <SelectedWork />
+      <Experience />
+      <Exploring />
+      <FindMe />
+    </SiteShell>
   );
 }

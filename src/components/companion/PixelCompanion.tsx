@@ -52,8 +52,8 @@ const DROP_MS = 640;
 /** How long a remark stays on screen. */
 const BUBBLE_MS = 4000;
 /** A desk hop: the beat between jumps, the arc, and the landing. */
-const BOUNCE_REST_MS = 1500;
-const BOUNCE_JITTER_MS = 900;
+const BOUNCE_REST_MS = 550;
+const BOUNCE_JITTER_MS = 450;
 const BOUNCE_PEAK_CELLS = 4;
 const BOUNCE_FLIGHT_MS = 300;
 const BOUNCE_SQUASH_MS = 110;

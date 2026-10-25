@@ -3,6 +3,7 @@ import { Github, Linkedin } from "lucide-react";
 import { site } from "@/data/site";
 import { useScrollSpy } from "@/lib/useScrollSpy";
 import { NAV_SECTIONS } from "./nav";
+import { LogoMark } from "@/components/ui/LogoMark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export function Sidebar() {
@@ -16,8 +17,9 @@ export function Sidebar() {
       <div className="px-6 pt-9">
         <Link
           to="/"
-          className="text-[15px] font-medium tracking-tight text-foreground"
+          className="flex items-center gap-2 text-[15px] font-medium tracking-tight text-foreground"
         >
+          <LogoMark className="h-[18px] w-[18px]" />
           {site.wordmark}
         </Link>
       </div>

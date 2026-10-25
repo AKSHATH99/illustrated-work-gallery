@@ -33,6 +33,31 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    // TEMP — media preview card for the screenshot carousel + walkthrough video
+    // layout, built from /public/test-image. Delete this object and its
+    // `projectMedia` entry to take it back out.
+    slug: "personal-website",
+    title: "Personal Website",
+    category: "Frontend · Design",
+    description:
+      "This site — a monochrome portfolio with a pixel character that follows you around.",
+    tech: ["React", "TanStack Start", "Tailwind", "Vite"],
+    visible: true,
+    detailPublished: true,
+    overview:
+      "The portfolio itself: a static, monochrome site with a small pixel character that moves between sections as you scroll, and a pixel-art workspace in the footer.",
+    problem:
+      "Most portfolios are a résumé in a template. This one is a place with a mood — and the thing that makes it mine is the character living in it.",
+    audience: "Anyone who lands here, and recruiters deciding whether to keep reading.",
+    approach: "",
+    decisions: "",
+    learned: "",
+    results: "",
+    limitations: "",
+    liveUrl: "",
+    repoUrl: "",
+  },
+  {
     slug: "web3-document-verification",
     title: "Web3 Document Verification",
     category: "Full-Stack · Web3",

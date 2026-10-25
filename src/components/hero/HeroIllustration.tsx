@@ -1,20 +1,15 @@
 import {
+  MOTION_CLASS,
   SCENE_CELLS,
   SCENE_COLS,
   SCENE_ROWS,
   SEAT,
   TONE_VARS,
   staticPaths,
-  type Motion,
 } from "./scene";
 
-const MOTION_CLASS: Record<Motion, string> = {
-  cursor: "hero-scene-cursor",
-  leaf: "hero-scene-leaf",
-  steam: "hero-scene-steam",
-};
-
-const animated = SCENE_CELLS.filter((cell) => cell.motion);
+const PATHS = staticPaths(SCENE_CELLS);
+const MOVING = SCENE_CELLS.filter((cell) => cell.motion);
 
 /**
  * The hero's pixel-art desk. Decorative — the character that belongs in it is
@@ -29,13 +24,13 @@ export function HeroIllustration() {
         shapeRendering="crispEdges"
         focusable="false"
       >
-        {staticPaths().map((path) => (
+        {PATHS.map((path) => (
           <path key={path.tone} d={path.d} style={{ fill: TONE_VARS[path.tone] }} />
         ))}
-        {animated.map((cell) => (
+        {MOVING.map((cell) => (
           <rect
             key={cell.motion}
-            className={MOTION_CLASS[cell.motion as Motion]}
+            className={MOTION_CLASS[cell.motion as keyof typeof MOTION_CLASS]}
             x={cell.x}
             y={cell.y}
             width={cell.w}

@@ -9,5 +9,5 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- The personal portfolio is a fully static frontend on TanStack Start (the platform stack) — no backend, database, auth, or CMS. The user's brief asked for Next.js; the same design was implemented here on the fixed stack instead. All editable content lives in `src/data/` (site.ts, projects.ts, projectThumbnails.ts, experience.ts, stack.ts, writing.ts).
+- The personal portfolio is a fully static frontend on TanStack Start (the platform stack) — no backend, database, auth, or CMS. The user's brief asked for Next.js; the same design was implemented here on the fixed stack instead. All editable content lives in `src/data/` (site.ts, projects.ts, projectThumbnails.ts, experience.ts, stack.ts, learningLog.ts).
 - Never fabricate personal facts: unconfigured links, dates, employer names, metrics, or project detail sections are left empty in `src/data/` and hidden from the UI rather than filled with placeholders.

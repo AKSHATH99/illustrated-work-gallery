@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteShell } from "@/components/layout/SiteShell";
+import { ProjectMedia } from "@/components/projects/ProjectMedia";
 import { projects, type Project } from "@/data/projects";
-import { projectThumbnails } from "@/data/projectThumbnails";
 
 /**
  * Reusable project detail template at /projects/<slug>. Only projects with
@@ -41,8 +41,6 @@ function ProjectPage() {
   const prev = index > 0 ? published[index - 1] : null;
   const next = index >= 0 && index < published.length - 1 ? published[index + 1] : null;
 
-  const thumbnail = projectThumbnails[project.slug];
-
   const sections = (
     [
       { title: "The problem", body: project.problem },
@@ -77,6 +75,8 @@ function ProjectPage() {
           <span className="text-foreground">{project.title}</span>
         </nav>
 
+        <ProjectMedia slug={project.slug} title={project.title} />
+
         <header className="mt-8">
           <p className="font-mono text-[11.5px] text-muted-foreground">{project.category}</p>
           <h1 className="mt-2 text-[26px] font-semibold tracking-tight text-foreground md:text-[30px]">
@@ -88,16 +88,6 @@ function ProjectPage() {
             </p>
           ) : null}
         </header>
-
-        {thumbnail ? (
-          <img
-            src={thumbnail}
-            alt={`${project.title} — screenshot`}
-            width={800}
-            height={512}
-            className="mt-8 w-full rounded-lg border border-border"
-          />
-        ) : null}
 
         {sections.map((section) => (
           <section key={section.title} className="mt-10">

@@ -32,6 +32,12 @@ export interface SpotConfig {
   offsetX: number;
   pose: PoseKey;
   facing: Facing;
+  /**
+   * A perch the character keeps to itself: it hops in place instead of sitting
+   * still. Only used where the sprite is part of an illustration, not where it
+   * perches on someone's content.
+   */
+  bounce?: boolean;
   /** Used when the platform is missing (e.g. links not configured yet). */
   fallback?: SpotConfig;
   /** A rest stop on the way to a section, not somewhere to stay. */
@@ -43,8 +49,7 @@ export const SECTION_IDS = [
   "experience",
   "projects",
   "stack",
-  "exploring",
-  "writing",
+  "learning",
   "find-me",
 ] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
@@ -66,6 +71,20 @@ export function navSpot(sectionId: string): SpotConfig {
   };
 }
 
+/** The link cards, which the section falls back to before its desk is in view. */
+const socialSpot: SpotConfig = {
+  id: "section:find-me:cards",
+  anchor: '[data-companion-anchor="social-card"]',
+  pick: "focus",
+  edge: "top",
+  alignX: "start",
+  offsetX: 18,
+  pose: "sit",
+  facing: "right",
+  // Before any links are configured, the hairline above the section is a fine bench.
+  fallback: dividerSpot("find-me", "center", -40, "sit"),
+};
+
 /** One resting place per section, keyed by section id. */
 export const SECTION_SPOTS: Record<SectionId, SpotConfig> = {
   home: {
@@ -79,14 +98,17 @@ export const SECTION_SPOTS: Record<SectionId, SpotConfig> = {
     offsetX: 0,
     pose: "sit",
     facing: "left",
+    bounce: true,
   },
   experience: {
     id: "section:experience",
     anchor: '[data-companion-anchor="timeline-dot"]',
     pick: "focus",
     edge: "top",
+    // Right against the marker, never over it: standing on the timeline would
+    // hide the line the marker exists to sit on.
     alignX: "end",
-    offsetX: 0,
+    offsetX: -8,
     pose: "stand",
     facing: "right",
     fallback: dividerSpot("experience", "start", 40, "stand"),
@@ -115,39 +137,33 @@ export const SECTION_SPOTS: Record<SectionId, SpotConfig> = {
     facing: "left",
     fallback: dividerSpot("stack", "center", 60, "stand"),
   },
-  exploring: {
-    id: "section:exploring",
-    anchor: '[data-companion-anchor="exploring-icon"]',
+  learning: {
+    id: "section:learning",
+    // The topic's icon: the character stands on the group it is reading, and
+    // walks the topics as the visitor scrolls through them.
+    anchor: '[data-companion-anchor="learning-topic"]',
     pick: "focus",
     edge: "top",
     alignX: "center",
     offsetX: 0,
     pose: "stand",
     facing: "right",
-    fallback: dividerSpot("exploring", "center", 60, "stand"),
-  },
-  writing: {
-    id: "section:writing",
-    anchor: '[data-companion-anchor="writing-card"]',
-    pick: "focus",
-    edge: "top",
-    alignX: "start",
-    offsetX: 18,
-    pose: "sit",
-    facing: "right",
-    fallback: dividerSpot("writing", "center", 120, "sit"),
+    fallback: dividerSpot("learning", "center", 60, "stand"),
   },
   "find-me": {
     id: "section:find-me",
-    anchor: '[data-companion-anchor="social-card"]',
-    pick: "focus",
+    // The expanded workspace at the end of the page: the character's other
+    // desk. It only measures once its own surface is on screen, so until the
+    // visitor gets there the section rests on the link cards below.
+    anchor: '[data-companion-anchor="footer-desk"]',
+    pick: "first",
     edge: "top",
-    alignX: "start",
-    offsetX: 18,
+    alignX: "center",
+    offsetX: 0,
     pose: "sit",
-    facing: "right",
-    // Before any links are configured, the hairline above the section is a fine bench.
-    fallback: dividerSpot("find-me", "center", -40, "sit"),
+    facing: "left",
+    bounce: true,
+    fallback: socialSpot,
   },
 };
 

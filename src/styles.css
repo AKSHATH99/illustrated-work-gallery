@@ -266,10 +266,35 @@
 }
 
 /* The perch: the companion's hips rest on this element's top edge. */
-.hero-scene-seat {
+.hero-scene-seat,
+.workspace-scene-seat {
   position: absolute;
   height: 6px;
   pointer-events: none;
+}
+
+/*
+ * Footer scene — the same desk, grown up. One drawing in two framings, both
+ * locked to the hero's cell size (1/16 of the companion), so the character's
+ * feet meet the plank at any width. The narrow framing crops in on the desk
+ * rather than shrinking the whole room into a few pixels.
+ */
+.workspace-scene {
+  position: relative;
+}
+
+.workspace-scene > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.workspace-scene-wide {
+  width: min(100%, calc(var(--companion-size) * 23.5));
+}
+
+.workspace-scene-narrow {
+  width: min(100%, calc(var(--companion-size) * 12.5));
 }
 
 @media (prefers-reduced-motion: no-preference) {

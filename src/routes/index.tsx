@@ -4,8 +4,7 @@ import { Intro } from "@/components/home/Intro";
 import { SelectedWork } from "@/components/home/SelectedWork";
 import { Experience } from "@/components/home/Experience";
 import { TechStack } from "@/components/home/TechStack";
-import { Exploring } from "@/components/home/Exploring";
-import { Writing } from "@/components/home/Writing";
+import { LearningLog } from "@/components/home/LearningLog";
 import { FindMe } from "@/components/home/FindMe";
 
 export const Route = createFileRoute("/")({
@@ -37,8 +36,7 @@ function Home() {
       <Experience />
       <SelectedWork />
       <TechStack />
-      <Exploring />
-      <Writing />
+      <LearningLog />
       <FindMe />
     </SiteShell>
   );

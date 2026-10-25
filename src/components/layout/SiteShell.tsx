@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { DotBackground } from "@/components/ui/DotBackground";
 import { PixelCompanion } from "@/components/companion/PixelCompanion";
 import { Footer } from "./Footer";
@@ -10,6 +11,10 @@ import { Sidebar } from "./Sidebar";
  * constrained main column that stays aligned across every section.
  */
 export function SiteShell({ children }: { children: ReactNode }) {
+  // Each page has its own set of perches, so the character starts fresh on the
+  // page it lands in rather than holding on to the last one it measured.
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+
   return (
     <div className="relative min-h-screen">
       <DotBackground />
@@ -24,7 +29,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           <Footer />
         </main>
       </div>
-      <PixelCompanion />
+      <PixelCompanion key={pathname} />
     </div>
   );
 }

@@ -51,6 +51,12 @@ const ENTRANCE_DELAY_MS = 420;
 const DROP_MS = 640;
 /** How long a remark stays on screen. */
 const BUBBLE_MS = 4000;
+/** A desk hop: the beat between jumps, the arc, and the landing. */
+const BOUNCE_REST_MS = 1500;
+const BOUNCE_JITTER_MS = 900;
+const BOUNCE_PEAK_CELLS = 4;
+const BOUNCE_FLIGHT_MS = 300;
+const BOUNCE_SQUASH_MS = 110;
 /** The entrance happens once per page load, not once per mount. */
 let entranceDone = false;
 
@@ -106,7 +112,9 @@ function readCompanionSize(): number {
  */
 export function PixelCompanion() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const enabled = pathname === "/";
+  // The character lives wherever there is something for it to perch on: the
+  // homepage sections, and a project page's screenshots and footer desk.
+  const enabled = pathname === "/" || pathname.startsWith("/projects/");
 
   const layerRef = useRef<HTMLDivElement | null>(null);
   const xTrackRef = useRef<HTMLDivElement | null>(null);
@@ -132,6 +140,11 @@ export function PixelCompanion() {
   const flightsRef = useRef<Animation[]>([]);
   const bubbleTurnRef = useRef(0);
   const bubbleTimerRef = useRef(0);
+  /** The spot the character is currently hopping at, and whose loop owns it. */
+  const bounceRef = useRef<{ spot: string; token: number } | null>(null);
+  const bounceSeqRef = useRef(0);
+  /** Mid-hop: the perch may not be re-measured out from under the arc. */
+  const hoppingRef = useRef(false);
   // The scroll refresh and the landing settle refer to each other; the ref
   // breaks the cycle without either one capturing a stale closure.
   const refreshRef = useRef<() => void>(() => {});
@@ -177,6 +190,7 @@ export function PixelCompanion() {
   }, []);
 
   const cancelMotion = useCallback(() => {
+    bounceRef.current = null;
     flightsRef.current.forEach((animation) => animation.cancel());
     flightsRef.current = [];
     timersRef.current.forEach((id) => window.clearTimeout(id));
@@ -304,21 +318,6 @@ export function PixelCompanion() {
     [focusPlacement, measure],
   );
 
-  /** Park the character at a spot with no animation. */
-  const park = useCallback(
-    (config: SpotConfig, sectionId: string): Outcome => {
-      const placement = resolve(config, sectionId);
-      if (!placement) return "no-perch";
-      const point = measure(placement);
-      if (!point) return "no-perch";
-      placeRef.current = placement;
-      moveTo(point);
-      show({ pose: config.pose, facing: config.facing });
-      return "moved";
-    },
-    [measure, moveTo, resolve, show],
-  );
-
   /**
    * Animate the sprite box along an arc. Horizontal and vertical movement run on
    * separate tracks, so a jump can rise quickly and fall with weight.
@@ -364,9 +363,86 @@ export function PixelCompanion() {
       return Promise.race([
         Promise.all([settled(horizontal), settled(vertical)]),
         sleep(flight.duration + 250),
-      ]).then(() => undefined);
+      ]).then(() => {
+        // Repeated hops would otherwise pile finished animations up forever.
+        flightsRef.current = flightsRef.current.filter(
+          (animation) => animation.playState === "running" || animation.playState === "paused",
+        );
+      });
     },
     [moveTo],
+  );
+
+  /**
+   * The two desks are lived in: the character hops on the spot until a move
+   * claims it. Every step re-checks the token, which `cancelMotion` revokes, so
+   * a hop can never fight a relocation for the same sprite.
+   */
+  const holdingBounce = useCallback((config: SpotConfig, token: number) => {
+    const held = bounceRef.current;
+    return (
+      !!held &&
+      held.token === token &&
+      held.spot === config.id &&
+      placeRef.current?.config.id === config.id &&
+      !prefersReducedMotion()
+    );
+  }, []);
+
+  const bounce = useCallback(
+    async (config: SpotConfig, token: number) => {
+      while (holdingBounce(config, token)) {
+        await sleep(BOUNCE_REST_MS + Math.random() * BOUNCE_JITTER_MS);
+        if (!holdingBounce(config, token)) return;
+        // Re-measured every beat, so the hops follow the desk as the page moves.
+        const point = placeRef.current ? measure(placeRef.current) : null;
+        if (!point) return;
+
+        hoppingRef.current = true;
+        try {
+          show({ pose: "air", facing: config.facing });
+          await fly(point, point, {
+            peak: Math.max(4, Math.round((sizeRef.current / GRID_SIZE) * BOUNCE_PEAK_CELLS)),
+            duration: BOUNCE_FLIGHT_MS,
+          });
+          if (!holdingBounce(config, token)) return;
+          show({ pose: "squash", facing: config.facing });
+          await sleep(BOUNCE_SQUASH_MS);
+          if (!holdingBounce(config, token)) return;
+          show({ pose: config.pose, facing: config.facing });
+        } finally {
+          hoppingRef.current = false;
+        }
+      }
+    },
+    [fly, holdingBounce, measure, show],
+  );
+
+  const startBounce = useCallback(
+    (config: SpotConfig) => {
+      if (!config.bounce || prefersReducedMotion()) return;
+      if (bounceRef.current?.spot === config.id) return;
+      const token = (bounceSeqRef.current += 1);
+      bounceRef.current = { spot: config.id, token };
+      void bounce(config, token);
+    },
+    [bounce],
+  );
+
+  /** Park the character at a spot with no animation. */
+  const park = useCallback(
+    (config: SpotConfig, sectionId: string): Outcome => {
+      const placement = resolve(config, sectionId);
+      if (!placement) return "no-perch";
+      const point = measure(placement);
+      if (!point) return "no-perch";
+      placeRef.current = placement;
+      moveTo(point);
+      show({ pose: config.pose, facing: config.facing });
+      startBounce(config);
+      return "moved";
+    },
+    [measure, moveTo, resolve, show, startBounce],
   );
 
   /**
@@ -421,11 +497,12 @@ export function PixelCompanion() {
       later(LAND_MS, token, () => {
         show({ pose: config.pose, facing: config.facing });
         busyRef.current = false;
+        startBounce(config);
         // The page may still have been scrolling underneath the landing.
         refreshRef.current();
       });
     },
-    [later, show],
+    [later, show, startBounce],
   );
 
   /**
@@ -585,9 +662,10 @@ export function PixelCompanion() {
       show({ pose: config.pose, facing: config.facing });
       busyRef.current = false;
       say(GREETING);
+      startBounce(config);
       refreshRef.current();
     },
-    [claim, dropIn, fly, measure, moveTo, park, resolve, say, setVisible, show],
+    [claim, dropIn, fly, measure, moveTo, park, resolve, say, setVisible, show, startBounce],
   );
 
   /**
@@ -596,7 +674,7 @@ export function PixelCompanion() {
    * on to, and back out of sight when there is nothing left to stand on.
    */
   const refresh = useCallback(() => {
-    if (busyRef.current) return;
+    if (busyRef.current || hoppingRef.current) return;
     const sectionId = activeRef.current;
     if (!sectionId) return;
     const current = placeRef.current;
@@ -612,6 +690,20 @@ export function PixelCompanion() {
           const section = sectionSpot(sectionId);
           if (section && resolve(section, sectionId)) {
             void travelTo(section, sectionId);
+            return;
+          }
+        }
+        // A section's own perch can come into reach underneath a stopgap: the
+        // footer desk only exists once the page has run out of scroll.
+        const preferred = sectionSpot(sectionId);
+        if (preferred && preferred.id !== current.config.id) {
+          const wanted = resolve(preferred, sectionId);
+          if (
+            wanted &&
+            wanted.config.id === preferred.id &&
+            since(lastMoveRef.current, REFOCUS_MS)
+          ) {
+            void relocate(preferred, sectionId);
             return;
           }
         }
@@ -693,6 +785,8 @@ export function PixelCompanion() {
       const current = placeRef.current;
       const point = pointRef.current;
       if (!current || !point || busyRef.current) return;
+      // At a desk that already hops, the hop is the idle behaviour.
+      if (current.config.bounce) return;
 
       const sitting = current.config.pose === "sit" || current.config.pose === "rest";
       const resting: SpriteState = {
@@ -790,6 +884,8 @@ export function PixelCompanion() {
 
     const current = placeRef.current;
     if (!current || prefersReducedMotion()) return;
+    // Already hopping on the spot — the remark is enough of a reply.
+    if (current.config.bounce) return;
 
     const resting: SpriteState = { pose: current.config.pose, facing: current.config.facing };
     const token = ++sequenceRef.current;

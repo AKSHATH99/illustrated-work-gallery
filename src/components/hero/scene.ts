@@ -84,10 +84,17 @@ export const TONE_VARS: Record<Tone, string> = {
   accent: "var(--accent)",
 };
 
-/** Merge the still cells into one path command per colour. */
-export function staticPaths(): { tone: Tone; d: string }[] {
+/** CSS class per motion, shared by every scene so one keyframe set covers them all. */
+export const MOTION_CLASS: Record<Motion, string> = {
+  cursor: "hero-scene-cursor",
+  leaf: "hero-scene-leaf",
+  steam: "hero-scene-steam",
+};
+
+/** Merge the still cells of a scene into one path command per colour. */
+export function staticPaths(cells: SceneCell[]): { tone: Tone; d: string }[] {
   const byTone = new Map<Tone, string[]>();
-  for (const cell of SCENE_CELLS) {
+  for (const cell of cells) {
     if (cell.motion) continue;
     const parts = byTone.get(cell.tone) ?? [];
     parts.push(`M${cell.x} ${cell.y}h${cell.w}v${cell.h}h-${cell.w}z`);

@@ -31,7 +31,7 @@ function sectionFromHref(href: string): string | null {
 }
 
 interface CompanionOptions {
-  /** Only the homepage has the sections the character can perch on. */
+  /** Whether this page has any section for the character to answer to. */
   enabled: boolean;
   /**
    * The section the character currently answers to. The owner clears it when it
@@ -41,6 +41,16 @@ interface CompanionOptions {
   onActiveChange: (next: string, reason: ActiveChangeReason) => void;
   onIdleBeat: () => void;
 }
+
+/**
+ * The element owning a section on this page. A project detail page has no
+ * `#projects` of its own, so a block can opt in with the matching
+ * `data-companion-section` attribute instead — the homepage's real ids win
+ * wherever they exist.
+ */
+const tracked = (id: string): HTMLElement | null =>
+  document.getElementById(id) ??
+  document.querySelector<HTMLElement>(`[data-companion-section="${id}"]`);
 
 export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }: CompanionOptions) {
   /** The navigation click currently being followed, if any. */
@@ -58,12 +68,15 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
       activeRef.current = null;
       return;
     }
-    if (activeRef.current === null) activeRef.current = "home";
-
-    const elements = SECTION_IDS.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => el !== null,
-    );
-    if (elements.length === 0) return;
+    const sections = SECTION_IDS.map((id): { id: string; el: HTMLElement } | null => {
+      const el = tracked(id);
+      return el ? { id, el } : null;
+    }).filter((s): s is { id: string; el: HTMLElement } => s !== null);
+    if (sections.length === 0) return;
+    // The page opens on its first tracked section: the hero on the homepage, the
+    // screenshots on a project page.
+    if (activeRef.current === null) activeRef.current = sections[0]?.id ?? "home";
+    const elements = sections.map((s) => s.el);
 
     const notify = (next: string) => {
       const previous = activeRef.current;
@@ -76,21 +89,32 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
       changeRef.current(next, isClick ? "click" : "scroll");
     };
 
+    /** The band is 15–30% down the window; a section overlapping it owns the page. */
+    const overlapsBand = (el: HTMLElement, bandTop: number, bandBottom: number) => {
+      const box = el.getBoundingClientRect();
+      return box.bottom > bandTop && box.top < bandBottom;
+    };
+
     /**
      * Which section owns the band right now. The bottom of the page is resolved
-     * the same way the sidebar's own scroll spy resolves it, so the character
-     * and the highlighted item can never disagree.
+     * the same way the sidebar's own scroll spy resolves it — the last section
+     * wins there outright — so the character and the highlighted item can never
+     * disagree, and the claim latches until that section has genuinely left the
+     * band: a few pixels of back-scroll must not hand the page to the section
+     * above and replay the arrival at the end of it.
      */
+    let ownsTheEnd = false;
     const sectionInView = (): string | null => {
       const bandTop = window.innerHeight * 0.15;
       const bandBottom = window.innerHeight * 0.3;
-      const last = elements[elements.length - 1];
-      if (last && isPinnedToPageBottom() && last.getBoundingClientRect().top > bandBottom) {
-        return last.id;
+      const last = sections[sections.length - 1];
+      if (last) {
+        if (isPinnedToPageBottom()) ownsTheEnd = true;
+        else if (!overlapsBand(last.el, bandTop, bandBottom)) ownsTheEnd = false;
+        if (ownsTheEnd) return last.id;
       }
-      for (const el of elements) {
-        const box = el.getBoundingClientRect();
-        if (box.bottom > bandTop && box.top < bandBottom) return el.id;
+      for (const section of sections) {
+        if (overlapsBand(section.el, bandTop, bandBottom)) return section.id;
       }
       return null;
     };

@@ -144,7 +144,8 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
         ? overlapping.find((s) => s.id === activeRef.current)
         : undefined;
       if (owner) return owner.id;
-      return direction === "down" ? overlapping[overlapping.length - 1].id : overlapping[0].id;
+      const claimant = direction === "down" ? overlapping.at(-1) : overlapping[0];
+      return claimant?.id ?? null;
     };
 
     const resolve = () => {

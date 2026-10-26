@@ -12,8 +12,12 @@ export type ActiveChangeReason = "click" | "scroll";
 
 /** The same band the sidebar's own scroll spy uses, so both stay in agreement. */
 const ROOT_MARGIN = "-15% 0px -70% 0px";
-/** A click stops owning the page once the visitor has been scrolling on their own. */
-const CLICK_TTL_MS = 1400;
+/**
+ * A click owns the page until its destination section reports in. The TTL is
+ * only a safety net — real user input (wheel, touch, keys) hands control back
+ * to scrolling sooner.
+ */
+const CLICK_TTL_MS = 4500;
 
 const isSectionId = (value: string): value is (typeof SECTION_IDS)[number] =>
   (SECTION_IDS as readonly string[]).includes(value);
@@ -83,8 +87,10 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
       if (previous === next) return;
       activeRef.current = next;
 
+      // Only the clicked destination counts as a click — sections it passes on
+      // the way there stay ordinary scroll events.
       const click = clickRef.current;
-      const isClick = click !== null && (click.to === next || Date.now() - click.at < 1000);
+      const isClick = click !== null && click.to === next;
       if (isClick) clickRef.current = null;
       changeRef.current(next, isClick ? "click" : "scroll");
     };
@@ -102,8 +108,27 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
      * disagree, and the claim latches until that section has genuinely left the
      * band: a few pixels of back-scroll must not hand the page to the section
      * above and replay the arrival at the end of it.
+     *
+     * At a boundary two sections can overlap the band at once, so the claim is
+     * deterministic rather than proximity-based: the owner keeps the page until
+     * it has left the band, and the section the visitor is entering — the
+     * bottom-most overlap when scrolling down, the top-most when scrolling up —
+     * takes over then. A jitter of a few pixels can therefore never bounce the
+     * claim back and forth between two neighbours.
      */
     let ownsTheEnd = false;
+    /** Travel direction, updated only by real scroll events so observer
+     * callbacks that run between frames still see the last known direction. */
+    let lastY = window.scrollY;
+    let direction: "down" | "up" = "down";
+    const onUserScrollY = () => {
+      const y = window.scrollY;
+      if (y !== lastY) {
+        direction = y > lastY ? "down" : "up";
+        lastY = y;
+      }
+    };
+
     const sectionInView = (): string | null => {
       const bandTop = window.innerHeight * 0.15;
       const bandBottom = window.innerHeight * 0.3;
@@ -113,10 +138,13 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
         else if (!overlapsBand(last.el, bandTop, bandBottom)) ownsTheEnd = false;
         if (ownsTheEnd) return last.id;
       }
-      for (const section of sections) {
-        if (overlapsBand(section.el, bandTop, bandBottom)) return section.id;
-      }
-      return null;
+      const overlapping = sections.filter((s) => overlapsBand(s.el, bandTop, bandBottom));
+      if (overlapping.length === 0) return null;
+      const owner = activeRef.current
+        ? overlapping.find((s) => s.id === activeRef.current)
+        : undefined;
+      if (owner) return owner.id;
+      return direction === "down" ? overlapping[overlapping.length - 1].id : overlapping[0].id;
     };
 
     const resolve = () => {
@@ -141,6 +169,7 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
     // out of view and needs reclaiming while the section itself never changed.
     let frame = 0;
     const onScroll = () => {
+      onUserScrollY();
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         frame = 0;
@@ -184,8 +213,21 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
       clickRef.current = { to: destination, at: Date.now() };
     };
 
+    // Real input — wheel, touch, keyboard — takes the page back from a pending
+    // navigation click: the visitor is scrolling on their own again.
+    const takeOver = () => {
+      clickRef.current = null;
+    };
+    window.addEventListener("wheel", takeOver, { passive: true });
+    window.addEventListener("touchstart", takeOver, { passive: true });
+    window.addEventListener("keydown", takeOver);
     document.addEventListener("click", onClick, true);
-    return () => document.removeEventListener("click", onClick, true);
+    return () => {
+      window.removeEventListener("wheel", takeOver);
+      window.removeEventListener("touchstart", takeOver);
+      window.removeEventListener("keydown", takeOver);
+      document.removeEventListener("click", onClick, true);
+    };
   }, [enabled]);
 
   // Infrequent, gated micro-motion: never while travelling, never in a hidden

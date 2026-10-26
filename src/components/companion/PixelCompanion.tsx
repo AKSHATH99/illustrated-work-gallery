@@ -762,10 +762,20 @@ export function PixelCompanion() {
     async (next: string, reason: ActiveChangeReason) => {
       const section = sectionSpot(next);
 
-      // Nowhere in the current layout for the character to sit: it goes away
-      // rather than hovering over body text, but keeps answering to the section,
-      // so the next scroll frame can place it as soon as a perch is reachable.
-      const retreat = () => {
+      /**
+       * Nowhere within reach in the section the visitor moved to: hold the
+       * last stable perch while it is still on screen — the footer desk is
+       * usually a screen below, the hero desk a screen above — and only go
+       * out of sight once that perch itself has scrolled away.
+       */
+      const hold = () => {
+        const current = placeRef.current;
+        const point = current ? measure(current) : null;
+        if (current && point) {
+          moveTo(point);
+          setVisible(true);
+          return;
+        }
         placeRef.current = null;
         setVisible(false);
       };
@@ -775,22 +785,22 @@ export function PixelCompanion() {
         const jumped = await jumpTo(navSpot(next), next, "jump");
         if (jumped === "superseded") return;
         const outcome = section ? await travelTo(section, next) : jumped;
-        if (outcome === "no-perch") retreat();
+        if (outcome === "no-perch") hold();
         return;
       }
 
       // Scrolling goes straight to the content the visitor is looking at — the
-      // sidebar is theirs to read, not a stop on the way.
+      // sidebar is theirs to read, not a stop on the way. One flight at a time:
+      // a section change while a jump is already in the air is left to the
+      // landing refresh, so rapid scrolling can never stack competing arcs.
+      if (busyRef.current) return;
       if (section) {
         const outcome = await relocate(section, next);
         if (outcome !== "no-perch") return;
       }
-      // Nothing in this section is in reach yet — the hero desk is usually a
-      // screen above. Wait out of sight for the next frame instead of parking
-      // on the sidebar, where there would be no reason to leave from.
-      retreat();
+      hold();
     },
-    [jumpTo, relocate, setVisible, travelTo],
+    [jumpTo, measure, moveTo, relocate, setVisible, travelTo],
   );
 
   useCompanion({

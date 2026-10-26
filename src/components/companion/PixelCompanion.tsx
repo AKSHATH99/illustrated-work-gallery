@@ -546,11 +546,13 @@ export function PixelCompanion() {
   );
 
   /**
-   * The long way between two places: out of sight at the old one, back in above
-   * the new one. Used when the character crosses sections — a ballistic arc
-   * that far would read as a flight, not a hop — and on its own when it has no
-   * visible position to leave from, which is how it arrives on a section the
-   * visitor has just scrolled into.
+   * The long way between two places: one clearly visible leap — crouch, an arc
+   * sized to the distance, a squash on landing — so crossing a section boundary
+   * reads as the character physically travelling there. It never stages a
+   * vanishing act in between; a small creature leaving the screen mid-page and
+   * reappearing elsewhere reads as a glitch, not as travel. An arrival staged
+   * from off screen is kept only for when it has no visible position to leave
+   * from, which is how it meets a section the visitor has just scrolled into.
    */
   const travelTo = useCallback(
     async (config: SpotConfig, sectionId: string): Promise<Outcome> => {
@@ -564,29 +566,34 @@ export function PixelCompanion() {
         return outcome;
       }
 
-      const sideways = from ? (to.x >= from.x ? 1 : -1) : config.facing === "right" ? 1 : -1;
-      if (from) {
-        show({ pose: "air", facing: sideways > 0 ? "right" : "left" });
-        await fly(
-          from,
-          { x: from.x + sideways * 20, y: from.y + 14 },
-          {
-            peak: 9,
-            duration: 190,
-            fade: "out",
-          },
-        );
+      if (!from) {
+        const sideways = config.facing === "right" ? -1 : 1;
+        show({ pose: "air", facing: config.facing });
+        await fly({ x: to.x + sideways * 24, y: to.y - 18 }, to, {
+          peak: 6,
+          duration: 240,
+          fade: "in",
+        });
         if (token !== sequenceRef.current) return "superseded";
+        land(placement, config, token);
+        return "moved";
       }
 
-      show({ pose: "air", facing: config.facing });
-      await fly({ x: to.x - sideways * 24, y: to.y - 18 }, to, {
-        peak: 6,
-        duration: 240,
-        fade: "in",
-      });
-      if (token !== sequenceRef.current) return "superseded";
+      const dx = to.x - from.x;
+      const facing: Facing = dx >= 0 ? "right" : "left";
+      const distance = Math.hypot(dx, to.y - from.y);
+      const peak = clamp(12 + distance * 0.22, 16, 52);
+      const duration = clamp(420 + distance * 0.6, 420, 820);
 
+      show({ pose: "stand", facing });
+      layerRef.current.classList.add("is-crouch");
+      await sleep(CROUCH_MS);
+      if (token !== sequenceRef.current) return "superseded";
+      layerRef.current.classList.remove("is-crouch");
+
+      show({ pose: "air", facing });
+      await fly(from, to, { peak, duration });
+      if (token !== sequenceRef.current) return "superseded";
       land(placement, config, token);
       return "moved";
     },
@@ -722,20 +729,29 @@ export function PixelCompanion() {
     }
 
     // The resting place is gone, or belongs to a section the visitor has left.
-    // The section's own perch claims the character; if even that is out of
-    // view, it waits rather than hovering over content.
+    // The section's own perch claims the character when it is within reach. If
+    // it is not — the footer desk is usually a screen below, the hero desk a
+    // screen above — the character holds its current perch while that is still
+    // on screen, and only goes out of sight once its own platform has scrolled
+    // away: vanishing between sections would read as a glitch, not as travel.
     const section = sectionSpot(sectionId);
     const placement = section ? resolve(section, sectionId) : null;
-    if (!section || !placement) {
-      placeRef.current = null;
-      setVisible(false);
+    if (section && placement) {
+      if (since(lastMoveRef.current, REFOCUS_MS)) {
+        void relocate(section, sectionId);
+        return;
+      }
+      setVisible(park(section, sectionId) === "moved");
       return;
     }
-    if (since(lastMoveRef.current, REFOCUS_MS)) {
-      void relocate(section, sectionId);
+    const held = current ? measure(current) : null;
+    if (current && held) {
+      moveTo(held);
+      setVisible(true);
       return;
     }
-    setVisible(park(section, sectionId) === "moved");
+    placeRef.current = null;
+    setVisible(false);
   }, [focusPlacement, measure, moveTo, park, relocate, resolve, setVisible, travelTo]);
 
   useEffect(() => {

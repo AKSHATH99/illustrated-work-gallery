@@ -212,6 +212,15 @@ export function useCompanion({ enabled, activeRef, onActiveChange, onIdleBeat }:
       if (!destination || !href.includes("#")) return;
 
       clickRef.current = { to: destination, at: Date.now() };
+      // The navigation takes over immediately: the character starts its
+      // two-stage trip the moment the click lands, instead of waiting hidden
+      // for the smooth scroll to carry the destination into the spy band.
+      // Claiming the section here also keeps the observer from re-firing the
+      // same trip when the destination crosses the band later.
+      if (activeRef.current !== destination) {
+        activeRef.current = destination;
+        changeRef.current(destination, "click");
+      }
     };
 
     // Real input — wheel, touch, keyboard — takes the page back from a pending

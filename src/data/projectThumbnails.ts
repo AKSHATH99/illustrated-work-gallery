@@ -13,20 +13,22 @@ export interface ProjectMedia {
 }
 
 export const projectMedia: Record<string, ProjectMedia> = {
-  // TEMP — the five screenshots and the clip below are the test assets in
-  // /public/test-image. Drop `video` to see the screenshot carousel instead.
-  "personal-website": {
+  // The main shot leads the card and the detail page; the rest follow in the
+  // order they were numbered — teacher views first, then student views.
+  "live-mcq-platform": {
     images: [
-      "/test-image/test-image.png",
-      "/test-image/test-image%20(Copy).png",
-      "/test-image/test-image%20(Copy%202).png",
-      "/test-image/test-image%20(Copy%203).png",
-      "/test-image/test-image%20(Copy%204).png",
+      "/images/project-images/socket-io/main.png",
+      "/images/project-images/socket-io/teacher-1.png",
+      "/images/project-images/socket-io/teacher-3.png",
+      "/images/project-images/socket-io/teacher-4.png",
+      "/images/project-images/socket-io/teacher-5.png",
+      "/images/project-images/socket-io/student-1.png",
+      "/images/project-images/socket-io/student-2.png",
+      "/images/project-images/socket-io/student-3.png",
     ],
-    video: "/test-image/test-video.webm",
   },
   "web3-document-verification": { images: ["/images/doc-verify.png"] },
-  "live-mcq-platform": { images: ["/images/mcq-platform.png"] },
+  gitscope: { images: ["/images/project-images/Github-Analyser/main.png"] },
 };
 
 /** The card thumbnail: the first screenshot of the project. */

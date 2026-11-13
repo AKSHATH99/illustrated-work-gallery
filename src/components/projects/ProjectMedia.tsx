@@ -1,13 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { projectMedia } from "@/data/projectThumbnails";
 
@@ -17,9 +9,9 @@ type Slide = { kind: "video"; src: string } | { kind: "image"; src: string; inde
 /**
  * The media that leads a project detail page.
  *
- * A walkthrough clip is the headline when there is one, with the screenshots
- * gathered beside it; otherwise the screenshots get the full width, as a single
- * banner or a swipeable set. Any screenshot opens full size when clicked, with
+ * A walkthrough clip is the headline when there is one; without a clip the
+ * project's main shot takes that place. Either way the rest of the screenshots
+ * are gathered beside it. Any screenshot opens full size when clicked, with
  * arrows — and the arrow keys — to walk the whole set, clip included, without
  * closing it; each tile is also a perch the companion can sit on. A project with
  * no media at all renders nothing.
@@ -28,29 +20,21 @@ export function ProjectMedia({ slug, title }: { slug: string; title: string }) {
   const media = projectMedia[slug];
   const images = media?.images ?? [];
   const video = media?.video;
+  /** The main shot — the one the card shows and the detail page leads with. */
+  const hero = images[0];
+  /** What trails it: the rest of the shots, or every one of them beside a clip. */
+  const gallery = video ? images : images.slice(1);
   /** The set the lightbox walks: the clip leads when the project has one. */
   const slides: Slide[] = [
     ...(video ? [{ kind: "video" as const, src: video }] : []),
     ...images.map((src, index) => ({ kind: "image" as const, src, index })),
   ];
   const count = slides.length;
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
   /** Index into `slides` of the media open in the lightbox, or null when closed. */
   const [zoomed, setZoomed] = useState<number | null>(null);
   const activeSlide = zoomed === null ? null : (slides[zoomed] ?? null);
   /** Where the pointer went down, so dragging a slide is not read as a click. */
   const pressRef = useRef<{ x: number; y: number } | null>(null);
-
-  useEffect(() => {
-    if (!api) return;
-    const select = () => setCurrent(api.selectedScrollSnap());
-    select();
-    api.on("select", select);
-    return () => {
-      api.off("select", select);
-    };
-  }, [api]);
 
   /** Move the open media by one, wrapping at either end like the carousel. */
   const step = useCallback(
@@ -60,7 +44,7 @@ export function ProjectMedia({ slug, title }: { slug: string; title: string }) {
   );
 
   // Arrow keys walk the set while it is open. Capture-free and scoped to the
-  // lightbox, so the carousel's own arrow keys still work when it is closed.
+  // lightbox, so the page's own arrow keys still work when it is closed.
   useEffect(() => {
     if (zoomed === null) return;
     const onKey = (event: KeyboardEvent) => {
@@ -87,15 +71,11 @@ export function ProjectMedia({ slug, title }: { slug: string; title: string }) {
     setZoomed(slides.findIndex((slide) => slide.kind === "image" && slide.index === index));
   };
 
-  /**
-   * One screenshot tile. `perch` marks it as somewhere the companion can sit;
-   * a carousel keeps that to the slide actually on screen, since the others are
-   * still laid out just outside the visible strip.
-   */
-  const screenshot = (src: string, index: number, frame: string, eager = false, perch = true) => (
+  /** One screenshot tile — a perch the companion can sit on, and a zoom. */
+  const screenshot = (src: string, index: number, frame: string, eager = false) => (
     <button
       type="button"
-      {...(perch ? { "data-companion-anchor": "project-card" } : {})}
+      data-companion-anchor="project-card"
       onPointerDown={(event) => {
         pressRef.current = { x: event.clientX, y: event.clientY };
       }}
@@ -143,51 +123,25 @@ export function ProjectMedia({ slug, title }: { slug: string; title: string }) {
               </ul>
             ) : null}
           </div>
-        ) : images.length === 1 ? (
-          screenshot(images[0] ?? "", 0, "w-full rounded-lg border border-border", true)
         ) : (
-          <figure>
-            <Carousel
-              opts={{ loop: true }}
-              setApi={setApi}
-              className="group/carousel overflow-hidden"
-            >
-              <CarouselContent className="-ml-0">
-                {images.map((src, index) => (
-                  <CarouselItem key={src} className="pl-0">
+          // No clip: the main shot takes the video's place, and the rest of the
+          // set steps back beside it.
+          <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]">
+            {hero ? screenshot(hero, 0, "w-full rounded-lg border border-border", true) : null}
+            {gallery.length > 0 ? (
+              <ul className="grid grid-cols-2 content-center gap-3">
+                {gallery.map((src, position) => (
+                  <li key={src}>
                     {screenshot(
                       src,
-                      index,
-                      "w-full rounded-lg border border-border",
-                      index === 0,
-                      index === current,
+                      position + 1,
+                      "aspect-[2/1] w-full rounded-lg border border-border object-cover",
                     )}
-                  </CarouselItem>
+                  </li>
                 ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-3 opacity-0 transition-opacity group-hover/carousel:opacity-100 focus-visible:opacity-100" />
-              <CarouselNext className="right-3 opacity-0 transition-opacity group-hover/carousel:opacity-100 focus-visible:opacity-100" />
-            </Carousel>
-            <figcaption className="mt-3 flex items-center gap-2">
-              {images.map((src, index) => (
-                <button
-                  key={src}
-                  type="button"
-                  aria-label={`Show screenshot ${index + 1}`}
-                  aria-current={index === current}
-                  onClick={() => api?.scrollTo(index)}
-                  className={`h-1.5 rounded-full transition-all ${
-                    index === current
-                      ? "w-5 bg-foreground"
-                      : "w-1.5 bg-border hover:bg-muted-foreground"
-                  }`}
-                />
-              ))}
-              <span className="ml-1.5 font-mono text-[11px] text-muted-foreground">
-                {current + 1} / {images.length}
-              </span>
-            </figcaption>
-          </figure>
+              </ul>
+            ) : null}
+          </div>
         )}
       </div>
 

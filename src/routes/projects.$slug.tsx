@@ -41,22 +41,8 @@ function ProjectPage() {
   const prev = index > 0 ? published[index - 1] : null;
   const next = index >= 0 && index < published.length - 1 ? published[index + 1] : null;
 
-  const sections = (
-    [
-      { title: "The problem", body: project.problem },
-      { title: "Who it's for", body: project.audience },
-      { title: "How I approached it", body: project.approach },
-      { title: "Technical decisions", body: project.decisions },
-      { title: "What I learned", body: project.learned },
-    ] as const
-  ).filter((section) => section.body);
-
-  const outcomes = (
-    [
-      { title: "Results", body: project.results },
-      { title: "Limitations", body: project.limitations },
-    ] as const
-  ).filter((section) => section.body);
+  // Each section answers its own question, so the headings are per project.
+  const sections = project.sections.filter((section) => section.body);
 
   return (
     <SiteShell>
@@ -94,26 +80,17 @@ function ProjectPage() {
             <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
               {section.title}
             </h2>
-            <p className="mt-3 max-w-[640px] text-[14.5px] leading-relaxed text-muted-foreground">
-              {section.body}
-            </p>
-          </section>
-        ))}
-
-        {outcomes.length > 0 ? (
-          <section className="mt-10">
-            {outcomes.map((section) => (
-              <div key={section.title} className="mt-6 first:mt-0">
-                <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
-                  {section.title}
-                </h2>
-                <p className="mt-3 max-w-[640px] text-[14.5px] leading-relaxed text-muted-foreground">
-                  {section.body}
-                </p>
-              </div>
+            {/* A blank line in the body starts a new paragraph. */}
+            {section.body.split(/\n\s*\n/).map((paragraph) => (
+              <p
+                key={paragraph}
+                className="mt-3 max-w-[640px] text-[14.5px] leading-relaxed text-muted-foreground"
+              >
+                {paragraph}
+              </p>
             ))}
           </section>
-        ) : null}
+        ))}
 
         {project.liveUrl || project.repoUrl ? (
           <div className="mt-10 flex flex-wrap gap-3">

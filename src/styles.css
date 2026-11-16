@@ -54,6 +54,7 @@
   --landscape-ground: color-mix(in oklab, var(--accent) 42%, var(--background));
   --landscape-deep: color-mix(in oklab, var(--foreground) 16%, var(--background));
   --landscape-stone: color-mix(in oklab, var(--foreground) 30%, var(--background));
+  --landscape-background: var(--background);
 }
 
 .dark,
@@ -69,6 +70,7 @@
   --landscape-ground: color-mix(in oklab, var(--accent) 42%, var(--background));
   --landscape-deep: color-mix(in oklab, var(--foreground) 16%, var(--background));
   --landscape-stone: color-mix(in oklab, var(--foreground) 30%, var(--background));
+  --landscape-background: var(--background);
 }
 
 @layer base {
@@ -342,6 +344,10 @@
 
 .workspace-scene-narrow {
   width: min(100%, calc(var(--companion-size) * 13.75));
+}
+
+.workspace-scene-seat {
+  height: 2px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

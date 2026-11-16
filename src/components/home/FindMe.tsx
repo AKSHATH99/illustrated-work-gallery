@@ -71,7 +71,7 @@ export function FindMe() {
       />
 
       {socials.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="spotlight grid gap-4 sm:grid-cols-2">
           {socials.map(({ name, url, handle, description, icon: Icon }) => (
             <a
               key={name}
@@ -79,31 +79,33 @@ export function FindMe() {
               target={url.startsWith("mailto:") ? undefined : "_blank"}
               rel="noreferrer"
               data-companion-anchor="social-card"
-              className="group flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-accent/50"
+              className="spotlight-item group flex items-center gap-4 rounded-lg border border-border p-4 hover:-translate-y-0.5 hover:border-accent/50"
             >
               <span
                 aria-hidden="true"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-all duration-300 group-hover:border-accent/50 group-hover:bg-accent/10 group-hover:text-accent"
               >
                 <Icon size={16} />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-baseline gap-2">
-                  <span className="text-[14px] font-medium text-foreground">{name}</span>
+                  <span className="text-[14px] font-medium text-foreground transition-colors duration-300 group-hover:text-accent">
+                    {name}
+                  </span>
                   {handle ? (
                     <span className="truncate font-mono text-[11px] text-muted-foreground">
                       {handle}
                     </span>
                   ) : null}
                 </span>
-                <span className="mt-0.5 block text-[13px] leading-relaxed text-muted-foreground">
+                <span className="mt-0.5 block text-[13px] leading-relaxed text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80">
                   {description}
                 </span>
               </span>
               <ArrowUpRight
                 size={15}
                 aria-hidden="true"
-                className="shrink-0 text-muted-foreground transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                className="shrink-0 text-muted-foreground transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent motion-reduce:transition-none"
               />
             </a>
           ))}

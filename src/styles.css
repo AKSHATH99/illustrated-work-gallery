@@ -35,7 +35,13 @@
   --color-ring: var(--accent);
 }
 
-:root {
+/*
+ * The `theme-light` / `theme-dark` aliases mirror these two blocks so the
+ * theme transition can read the palette of a theme it is not in yet (see
+ * src/lib/themeTransition.ts). Keep both lists in step.
+ */
+:root,
+.theme-light {
   --radius: 0.625rem;
   --background: #fafaf9;
   --foreground: #171717;
@@ -45,7 +51,8 @@
   --accent: #4d9a70;
 }
 
-.dark {
+.dark,
+.theme-dark {
   --background: #111110;
   --foreground: #ededeb;
   --muted-foreground: #a1a1a1;
@@ -81,6 +88,41 @@
   html {
     scroll-behavior: smooth;
   }
+}
+
+/*
+ * Theme transition — the page softens under a blur and a sheet of the incoming
+ * theme is drawn over it from the toggle. The sheet is opaque and matches the
+ * incoming background exactly, so when it has covered the viewport the page
+ * underneath can swap themes without the user ever seeing the seam.
+ */
+.theme-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* The veil is the blur: it sits over the page and under the sheet. */
+.theme-transition__veil {
+  position: absolute;
+  inset: 0;
+  background-color: color-mix(in oklab, var(--theme-transition-target) 22%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+}
+
+/* The sheet: a circle that grows from the toggle to cover the viewport. */
+.theme-transition__sheet {
+  position: absolute;
+  border-radius: 50%;
+  background-color: var(--theme-transition-target);
+  transform: scale(0);
+  will-change: transform;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--theme-transition-accent) 26%, transparent),
+    0 0 90px color-mix(in oklab, var(--theme-transition-accent) 16%, transparent);
 }
 
 /*
@@ -343,5 +385,79 @@
   35%,
   55% {
     opacity: 0.9;
+  }
+}
+
+/*
+ * Spotlight rows — hovering one item dims its siblings, so the item under the
+ * pointer is the only one that reads as active. The parent knows when one of
+ * its children is hovered, and each child knows it is not the one.
+ */
+.spotlight-item {
+  transition:
+    opacity 300ms ease,
+    filter 300ms ease,
+    color 300ms ease,
+    background-color 300ms ease,
+    border-color 300ms ease,
+    transform 300ms ease;
+}
+
+.spotlight:has(> .spotlight-item:hover) > .spotlight-item:not(:hover) {
+  opacity: 0.34;
+  filter: saturate(0.55);
+}
+
+/*
+ * Project card — a soft accent light that follows the pointer. One layer sits
+ * behind the card's content (the wash around the text), the other over the
+ * screenshot; both are driven by the same pointer position.
+ */
+.project-card {
+  isolation: isolate;
+}
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklab, var(--accent) 13%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+/* The same light over the screenshot, a little stronger. */
+.project-card__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklab, var(--accent) 22%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.project-card:hover::before,
+.project-card:hover .project-card__glow {
+  opacity: 1;
+}
+
+.project-card:hover {
+  box-shadow: 0 22px 48px -30px color-mix(in oklab, var(--foreground) 60%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card::before,
+  .project-card__glow {
+    display: none;
   }
 }

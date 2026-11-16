@@ -65,7 +65,7 @@ function Entries({ topic }: { topic: LearningTopic }) {
         return (
           <div key={group.label}>
             <h4 className="font-mono text-[10.5px] text-muted-foreground/70">{group.label}</h4>
-            <ul className="mt-2 space-y-2.5">
+            <ul className="spotlight mt-2 space-y-2.5">
               {entries.map((entry) => (
                 <EntryRow
                   key={entry.kind + ":" + ("title" in entry ? entry.title : entry.body)}
@@ -84,7 +84,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
   switch (entry.kind) {
     case "post":
       return (
-        <li>
+        <li className="spotlight-item">
           <EntryLink href={entry.url} className="group flex items-start gap-4">
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-1.5">
@@ -93,12 +93,12 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
                   <ArrowUpRight
                     size={13}
                     aria-hidden="true"
-                    className="shrink-0 text-muted-foreground transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                    className="shrink-0 text-muted-foreground transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent motion-reduce:transition-none"
                   />
                 ) : null}
               </span>
               {entry.description ? (
-                <span className="mt-1 block max-w-[560px] text-[13px] leading-relaxed text-muted-foreground">
+                <span className="mt-1 block max-w-[560px] text-[13px] leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
                   {entry.description}
                 </span>
               ) : null}
@@ -129,7 +129,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "note":
       return (
-        <li>
+        <li className="spotlight-item group">
           <div className="flex flex-wrap items-baseline justify-between gap-x-3">
             <h5 className="text-[13.5px] font-medium text-foreground">
               {entry.url ? (
@@ -151,7 +151,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
             ) : null}
           </div>
           {entry.description ? (
-            <p className="mt-0.5 max-w-[560px] text-[13px] leading-relaxed text-muted-foreground">
+            <p className="mt-0.5 max-w-[560px] text-[13px] leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
               {entry.description}
             </p>
           ) : null}
@@ -160,7 +160,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "update":
       return (
-        <li className="flex items-start gap-2.5 text-[13px] leading-relaxed text-muted-foreground">
+        <li className="spotlight-item flex items-start gap-2.5 text-[13px] leading-relaxed text-muted-foreground transition-colors hover:text-foreground/85">
           <span
             aria-hidden="true"
             className="mt-[8px] h-px w-2.5 shrink-0 bg-muted-foreground/35"
@@ -176,7 +176,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "resource":
       return (
-        <li>
+        <li className="spotlight-item group">
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <EntryLink
               href={entry.url}
@@ -191,7 +191,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
             </span>
           </div>
           {entry.description ? (
-            <p className="mt-0.5 max-w-[560px] text-[13px] leading-relaxed text-muted-foreground">
+            <p className="mt-0.5 max-w-[560px] text-[13px] leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
               {entry.description}
             </p>
           ) : null}
@@ -200,10 +200,10 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "project":
       return (
-        <li>
+        <li className="spotlight-item group">
           <h5 className="text-[13.5px] font-medium text-foreground">{entry.title}</h5>
           {entry.description ? (
-            <p className="mt-0.5 max-w-[560px] text-[13px] leading-relaxed text-muted-foreground">
+            <p className="mt-0.5 max-w-[560px] text-[13px] leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
               {entry.description}
             </p>
           ) : null}
@@ -250,18 +250,18 @@ function TopicGroup({ topic, defaultOpen }: { topic: LearningTopic; defaultOpen:
   const hasEntries = topic.entries.length > 0;
 
   return (
-    <li className="border-t border-border py-5 first:border-t-0 first:pt-0">
+    <li className="spotlight-item group/topic border-t border-border py-5 first:border-t-0 first:pt-0">
       <div className="flex items-start gap-3">
         <span
           aria-hidden="true"
           data-companion-anchor="learning-topic"
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground"
+          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-all duration-300 group-hover/topic:border-accent/50 group-hover/topic:bg-accent/10 group-hover/topic:text-accent"
         >
           <Icon size={15} />
         </span>
 
         <div className="min-w-0 flex-1">
-          <h3 className="text-[15px] font-medium tracking-tight text-foreground">
+          <h3 className="text-[15px] font-medium tracking-tight text-foreground transition-colors duration-300 group-hover/topic:text-accent">
             {hasEntries ? (
               <button
                 type="button"
@@ -273,7 +273,7 @@ function TopicGroup({ topic, defaultOpen }: { topic: LearningTopic; defaultOpen:
                 <span>{topic.name}</span>
                 <span className="flex shrink-0 items-center gap-2.5">
                   {meta ? (
-                    <span className="hidden font-mono text-[10.5px] font-normal text-muted-foreground/70 sm:inline">
+                    <span className="hidden font-mono text-[10.5px] font-normal text-muted-foreground/70 transition-colors duration-300 group-hover/topic:text-muted-foreground sm:inline">
                       {meta}
                     </span>
                   ) : null}
@@ -291,7 +291,7 @@ function TopicGroup({ topic, defaultOpen }: { topic: LearningTopic; defaultOpen:
             )}
           </h3>
           {topic.description ? (
-            <p className="mt-0.5 max-w-[560px] text-[13.5px] leading-relaxed text-muted-foreground">
+            <p className="mt-0.5 max-w-[560px] text-[13.5px] leading-relaxed text-muted-foreground transition-colors duration-300 group-hover/topic:text-foreground/80">
               {topic.description}
             </p>
           ) : null}
@@ -318,7 +318,7 @@ export function LearningLog() {
         intro="Some things I'm learning take a few days to figure out; others turn into projects or notes worth sharing. Here's where I keep track of it all."
       />
 
-      <ul>
+      <ul className="spotlight">
         {learningTopics.map((topic) => (
           <TopicGroup key={topic.id} topic={topic} defaultOpen={topic.defaultOpen ?? true} />
         ))}

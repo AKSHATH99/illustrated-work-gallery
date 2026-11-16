@@ -29,6 +29,7 @@ export const projectMedia: Record<string, ProjectMedia> = {
   },
   "web3-document-verification": { images: ["/images/doc-verify.png"] },
   gitscope: { images: ["/images/project-images/Github-Analyser/main.png"] },
+  "live-coding-platform": { images: ["/images/live-coding.png"] },
 };
 
 /** The card thumbnail: the first screenshot of the project. */

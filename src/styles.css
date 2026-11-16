@@ -49,6 +49,12 @@
   --border: #e5e5e2;
   --surface: #f0f0ed;
   --accent: #4d9a70;
+  --landscape-distant: color-mix(in oklab, var(--accent) 17%, var(--background));
+  --landscape-mid: color-mix(in oklab, var(--accent) 30%, var(--background));
+  --landscape-ground: color-mix(in oklab, var(--accent) 42%, var(--background));
+  --landscape-deep: color-mix(in oklab, var(--foreground) 16%, var(--background));
+  --landscape-stone: color-mix(in oklab, var(--foreground) 30%, var(--background));
+  --landscape-background: var(--background);
 }
 
 .dark,
@@ -59,6 +65,12 @@
   --border: #30302e;
   --surface: #1b1b19;
   --accent: #83c49b;
+  --landscape-distant: color-mix(in oklab, var(--accent) 17%, var(--background));
+  --landscape-mid: color-mix(in oklab, var(--accent) 30%, var(--background));
+  --landscape-ground: color-mix(in oklab, var(--accent) 42%, var(--background));
+  --landscape-deep: color-mix(in oklab, var(--foreground) 16%, var(--background));
+  --landscape-stone: color-mix(in oklab, var(--foreground) 30%, var(--background));
+  --landscape-background: var(--background);
 }
 
 @layer base {
@@ -315,12 +327,7 @@
   pointer-events: none;
 }
 
-/*
- * Footer scene — the same desk, grown up. One drawing in two framings, both
- * locked to the hero's cell size (1/16 of the companion), so the character's
- * feet meet the plank at any width. The narrow framing crops in on the desk
- * rather than shrinking the whole room into a few pixels.
- */
+/* Footer landscape — crisp cells stay aligned to the companion sprite. */
 .workspace-scene {
   position: relative;
 }
@@ -332,11 +339,15 @@
 }
 
 .workspace-scene-wide {
-  width: min(100%, calc(var(--companion-size) * 23.5));
+  width: min(100%, calc(var(--companion-size) * 28.75));
 }
 
 .workspace-scene-narrow {
-  width: min(100%, calc(var(--companion-size) * 12.5));
+  width: min(100%, calc(var(--companion-size) * 13.75));
+}
+
+.workspace-scene-seat {
+  height: 2px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

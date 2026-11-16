@@ -7,21 +7,17 @@ export function Footer() {
         That's about it from my corner of the internet. Thanks for stopping by.
       </p>
 
-      {/* The artwork's own top padding differs between the two framings, so the
-          gap above it is tuned per breakpoint to land in the same band. */}
-      <div className="mt-10 md:mt-8">
-        <WorkspaceScene />
+      <div className="mt-5 flex justify-end">
+        <a
+          href="#top"
+          className="text-[12.5px] text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Back to top ↑
+        </a>
       </div>
 
-      <div className="mt-10 border-t border-border pt-7 pb-2">
-        <div className="flex justify-end">
-          <a
-            href="#top"
-            className="text-[12.5px] text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Back to top ↑
-          </a>
-        </div>
+      <div className="mt-2">
+        <WorkspaceScene />
       </div>
     </footer>
   );

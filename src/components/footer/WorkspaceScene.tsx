@@ -1,5 +1,5 @@
 import { MOTION_CLASS, TONE_VARS, staticPaths } from "@/components/hero/scene";
-import { WORKSPACE_CELLS, WORKSPACE_NARROW, WORKSPACE_SEAT, WORKSPACE_WIDE } from "./workspace";
+import { LANDSCAPE_CELLS, LANDSCAPE_NARROW, LANDSCAPE_SEAT, LANDSCAPE_WIDE } from "./workspace";
 
 interface Frame {
   x: number;
@@ -8,8 +8,8 @@ interface Frame {
   h: number;
 }
 
-const PATHS = staticPaths(WORKSPACE_CELLS);
-const MOVING = WORKSPACE_CELLS.filter((cell) => cell.motion);
+const PATHS = staticPaths(LANDSCAPE_CELLS);
+const MOVING = LANDSCAPE_CELLS.filter((cell) => cell.motion);
 
 /** One framing of the drawing, with the perch measured against that framing. */
 function Framed({ frame, className }: { frame: Frame; className: string }) {
@@ -42,9 +42,9 @@ function Framed({ frame, className }: { frame: Frame; className: string }) {
         data-companion-anchor="footer-desk"
         className="workspace-scene-seat"
         style={{
-          left: `${((WORKSPACE_SEAT.x - frame.x) / frame.w) * 100}%`,
-          top: `${((WORKSPACE_SEAT.y - frame.y) / frame.h) * 100}%`,
-          width: `${(WORKSPACE_SEAT.w / frame.w) * 100}%`,
+          left: `${((LANDSCAPE_SEAT.x - frame.x) / frame.w) * 100}%`,
+          top: `${((LANDSCAPE_SEAT.y - frame.y) / frame.h) * 100}%`,
+          width: `${(LANDSCAPE_SEAT.w / frame.w) * 100}%`,
         }}
       />
     </div>
@@ -52,15 +52,14 @@ function Framed({ frame, className }: { frame: Frame; className: string }) {
 }
 
 /**
- * The workspace at the end of the page. Decorative, and empty of characters on
- * purpose: the one that belongs here is the page companion, which arrives here
- * once the visitor has scrolled all the way down.
+ * The night landscape at the very end of the page. The page companion arrives
+ * on its open grassy perch once the visitor reaches the footer.
  */
 export function WorkspaceScene() {
   return (
     <div aria-hidden="true" className="select-none">
-      <Framed frame={WORKSPACE_NARROW} className="workspace-scene-narrow lg:hidden" />
-      <Framed frame={WORKSPACE_WIDE} className="workspace-scene-wide hidden lg:block" />
+      <Framed frame={LANDSCAPE_NARROW} className="workspace-scene-narrow lg:hidden" />
+      <Framed frame={LANDSCAPE_WIDE} className="workspace-scene-wide hidden lg:block" />
     </div>
   );
 }

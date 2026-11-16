@@ -12,7 +12,7 @@
  * own and can never leave one behind.
  */
 
-export type Tone = "body" | "shade" | "accent";
+export type Tone = "body" | "shade" | "accent" | "distant" | "mid" | "ground" | "deep" | "stone";
 
 export type Motion = "cursor" | "leaf" | "steam";
 
@@ -82,6 +82,11 @@ export const TONE_VARS: Record<Tone, string> = {
   body: "var(--companion-body)",
   shade: "var(--companion-shade)",
   accent: "var(--accent)",
+  distant: "var(--landscape-distant)",
+  mid: "var(--landscape-mid)",
+  ground: "var(--landscape-ground)",
+  deep: "var(--landscape-deep)",
+  stone: "var(--landscape-stone)",
 };
 
 /** CSS class per motion, shared by every scene so one keyframe set covers them all. */

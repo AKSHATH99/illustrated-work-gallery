@@ -399,15 +399,12 @@
 }
 
 .workspace-scene-bleed {
-  position: relative;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
+  width: 100%;
+  overflow: hidden;
 }
 
 .workspace-scene-wide {
-  width: calc(100vw - 232px);
-  max-width: 100%;
+  width: 100%;
 }
 
 .workspace-scene-wide > svg {
@@ -415,7 +412,7 @@
 }
 
 .workspace-scene-narrow {
-  width: 100vw;
+  width: 100%;
 }
 
 .workspace-scene-seat {

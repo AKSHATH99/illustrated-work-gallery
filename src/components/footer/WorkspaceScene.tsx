@@ -17,6 +17,7 @@ function Framed({ frame, className }: { frame: Frame; className: string }) {
     <div className={`workspace-scene ${className}`}>
       <svg
         viewBox={`${frame.x} ${frame.y} ${frame.w} ${frame.h}`}
+        preserveAspectRatio={frame.w === LANDSCAPE_WIDE.w ? "none" : "xMidYMid meet"}
         shapeRendering="crispEdges"
         focusable="false"
       >

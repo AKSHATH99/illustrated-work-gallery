@@ -17,6 +17,7 @@ function Framed({ frame, className }: { frame: Frame; className: string }) {
     <div className={`workspace-scene ${className}`}>
       <svg
         viewBox={`${frame.x} ${frame.y} ${frame.w} ${frame.h}`}
+        preserveAspectRatio={frame.w === LANDSCAPE_WIDE.w ? "none" : "xMidYMid meet"}
         shapeRendering="crispEdges"
         focusable="false"
       >
@@ -57,7 +58,7 @@ function Framed({ frame, className }: { frame: Frame; className: string }) {
  */
 export function WorkspaceScene() {
   return (
-    <div aria-hidden="true" className="select-none">
+    <div aria-hidden="true" className="workspace-scene-bleed select-none">
       <Framed frame={LANDSCAPE_NARROW} className="workspace-scene-narrow lg:hidden" />
       <Framed frame={LANDSCAPE_WIDE} className="workspace-scene-wide hidden lg:block" />
     </div>

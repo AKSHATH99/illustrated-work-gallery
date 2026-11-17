@@ -12,7 +12,12 @@
  * own and can never leave one behind.
  */
 
-export type Tone = "body" | "shade" | "accent" | "distant" | "mid" | "ground" | "deep" | "stone" | "background";
+export type Tone =
+  | "body" | "shade" | "accent" | "distant" | "mid" | "ground" | "deep" | "stone" | "background"
+  | "sky" | "star" | "star-bright" | "moon" | "cloud" | "hill-back" | "hill" | "hill-light"
+  | "path" | "wood" | "window" | "foliage" | "foliage-shade" | "foliage-light" | "bark" | "pine"
+  | "bush" | "bush-shade" | "roof" | "door" | "smoke" | "ground-light" | "meadow" | "meadow-light"
+  | "soil" | "soil-light" | "flower-gold" | "flower-red" | "flower-lilac" | "mushroom";
 
 export type Motion = "cursor" | "leaf" | "steam";
 
@@ -88,6 +93,36 @@ export const TONE_VARS: Record<Tone, string> = {
   deep: "var(--landscape-deep)",
   stone: "var(--landscape-stone)",
   background: "var(--landscape-background)",
+  sky: "var(--landscape-sky)",
+  star: "var(--landscape-star)",
+  "star-bright": "var(--landscape-star-bright)",
+  moon: "var(--landscape-moon)",
+  cloud: "var(--landscape-cloud)",
+  "hill-back": "var(--landscape-hill-back)",
+  hill: "var(--landscape-hill)",
+  "hill-light": "var(--landscape-hill-light)",
+  path: "var(--landscape-path)",
+  wood: "var(--landscape-wood)",
+  window: "var(--landscape-window)",
+  foliage: "var(--landscape-foliage)",
+  "foliage-shade": "var(--landscape-foliage-shade)",
+  "foliage-light": "var(--landscape-foliage-light)",
+  bark: "var(--landscape-bark)",
+  pine: "var(--landscape-pine)",
+  bush: "var(--landscape-bush)",
+  "bush-shade": "var(--landscape-bush-shade)",
+  roof: "var(--landscape-roof)",
+  door: "var(--landscape-door)",
+  smoke: "var(--landscape-smoke)",
+  "ground-light": "var(--landscape-ground-light)",
+  meadow: "var(--landscape-meadow)",
+  "meadow-light": "var(--landscape-meadow-light)",
+  soil: "var(--landscape-soil)",
+  "soil-light": "var(--landscape-soil-light)",
+  "flower-gold": "var(--landscape-flower-gold)",
+  "flower-red": "var(--landscape-flower-red)",
+  "flower-lilac": "var(--landscape-flower-lilac)",
+  mushroom: "var(--landscape-mushroom)",
 };
 
 /** CSS class per motion, shared by every scene so one keyframe set covers them all. */

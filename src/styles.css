@@ -380,43 +380,217 @@
 }
 
 /* The perch: the companion's hips rest on this element's top edge. */
-.hero-scene-seat,
-.workspace-scene-seat {
+.hero-scene-seat {
   position: absolute;
   height: 6px;
   pointer-events: none;
 }
 
-/* Footer landscape — crisp cells stay aligned to the companion sprite. */
-.workspace-scene {
+/*
+ * Footer landscape — the pixel countryside that closes the page. One scene cell
+ * is one SVG unit, and the strip crops its sides on narrow screens so the
+ * clearing the companion lands in stays centred. The sky is transparent, so the
+ * page background shows through, and the bottom rows dither into the page.
+ */
+.pixel-landscape {
   position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
 }
 
-.workspace-scene > svg {
+@media (min-width: 640px) {
+  .pixel-landscape {
+    height: 250px;
+  }
+}
+
+@media (min-width: 768px) {
+  .pixel-landscape {
+    height: 300px;
+  }
+}
+
+.pixel-landscape > svg {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 
-.workspace-scene-bleed {
-  width: 100%;
-  overflow: hidden;
+/* Scene motion: one keyframe set covers the night and the day version. */
+.pixel-landscape .pl-fade {
+  animation: pl-fade 0.6s ease-out;
 }
 
-.workspace-scene-wide {
-  width: 100%;
+@keyframes pl-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.workspace-scene-wide > svg {
-  height: clamp(280px, 30vw, 380px);
+.pixel-landscape .pl-twinkle {
+  animation: pl-twinkle 3.6s steps(3, end) infinite;
 }
 
-.workspace-scene-narrow {
-  width: 100%;
+@keyframes pl-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
 }
 
-.workspace-scene-seat {
-  height: 2px;
+.pixel-landscape .pl-flicker {
+  animation: pl-flicker 4.2s steps(2, end) infinite;
+}
+
+@keyframes pl-flicker {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  45% {
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 1;
+  }
+}
+
+.pixel-landscape .pl-smoke {
+  opacity: 0;
+  animation: pl-smoke 3.9s linear infinite;
+}
+
+@keyframes pl-smoke {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(3px, -10px);
+    opacity: 0;
+  }
+}
+
+.pixel-landscape .pl-drift {
+  animation: pl-drift 5s ease-in-out infinite;
+}
+
+@keyframes pl-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(2px, -3px);
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.2;
+  }
+}
+
+.pixel-landscape .pl-ray {
+  animation: pl-ray 6s ease-in-out infinite;
+}
+
+@keyframes pl-ray {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.pixel-landscape .pl-fly {
+  animation: pl-fly linear infinite;
+}
+
+@keyframes pl-fly {
+  from {
+    transform: translate(-40px, 0);
+  }
+  to {
+    transform: translate(520px, -6px);
+  }
+}
+
+.pixel-landscape .pl-frame-a {
+  animation: pl-frame-a 0.6s steps(1, end) infinite;
+}
+
+.pixel-landscape .pl-frame-b {
+  opacity: 0;
+  animation: pl-frame-b 0.6s steps(1, end) infinite;
+}
+
+@keyframes pl-frame-a {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pl-frame-b {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.pixel-landscape .pl-walk {
+  opacity: 0;
+  animation: pl-walk 34s linear infinite;
+}
+
+@keyframes pl-walk {
+  0% {
+    transform: translate(-8px, 0);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(112px, 0);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-landscape * {
+    animation: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -3,6 +3,7 @@ import { Github, Linkedin } from "lucide-react";
 import { site } from "@/data/site";
 import { useScrollSpy } from "@/lib/useScrollSpy";
 import { NAV_SECTIONS } from "./nav";
+import { SidebarGarden } from "./SidebarGarden";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -42,9 +43,7 @@ export function Sidebar() {
                       isActive ? "opacity-100" : "opacity-0 group-hover:opacity-40"
                     }`}
                   />
-                  <span className={isActive ? "text-foreground" : undefined}>
-                    {item.label}
-                  </span>
+                  <span className={isActive ? "text-foreground" : undefined}>{item.label}</span>
                   <span className="ml-auto font-mono text-[10.5px] text-muted-foreground/60">
                     {item.index}
                   </span>
@@ -55,7 +54,10 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="border-t border-border px-6 py-5">
+      <div className="relative border-t border-border px-6 py-5">
+        {/* The rule is the ground: a low hedge runs its whole width, so the
+            garden belongs to the sidebar rather than to a corner of it. */}
+        <SidebarGarden className="pointer-events-none absolute inset-x-0 -top-px -translate-y-full" />
         <div className="flex items-center gap-1">
           {site.githubUrl ? (
             <a

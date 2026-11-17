@@ -152,10 +152,10 @@ export const SECTION_SPOTS: Record<SectionId, SpotConfig> = {
   },
   "find-me": {
     id: "section:find-me",
-    // The expanded workspace at the end of the page: the character's other
-    // desk. It only measures once its own surface is on screen, so until the
-    // visitor gets there the section rests on the link cards below.
-    anchor: '[data-companion-anchor="footer-desk"]',
+    // The meadow at the end of the page: the character's other resting place.
+    // It only measures once its own grass is on screen, so until the visitor
+    // gets there the section rests on the link cards below.
+    anchor: '[data-companion-anchor="footer-grass"]',
     pick: "first",
     edge: "top",
     alignX: "center",

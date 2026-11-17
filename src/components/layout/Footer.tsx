@@ -1,4 +1,4 @@
-import { WorkspaceScene } from "@/components/footer/WorkspaceScene";
+import { PixelLandscape } from "@/components/footer/PixelLandscape";
 
 export function Footer() {
   return (
@@ -18,8 +18,10 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mt-1 w-full">
-        <WorkspaceScene />
+      {/* The countryside that closes the page: day in the light theme, night in
+          the dark one. The page companion lands on the grass in its clearing. */}
+      <div className="mt-10">
+        <PixelLandscape />
       </div>
     </footer>
   );

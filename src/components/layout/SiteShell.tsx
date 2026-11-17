@@ -23,7 +23,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <div className="relative lg:pl-[232px]">
         <main
           id="top"
-          className="mx-auto w-full max-w-[820px] px-5 pb-4 pt-10 md:px-10 md:pt-12 lg:px-8"
+          className="mx-auto w-full max-w-[820px] px-5 pb-0 pt-10 md:px-10 md:pt-12 lg:px-8"
         >
           {children}
           <Footer />

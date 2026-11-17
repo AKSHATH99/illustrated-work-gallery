@@ -7,7 +7,7 @@ export function Footer() {
         That's about it from my corner of the internet. Thanks for stopping by.
       </p>
 
-      <div className="mt-5 flex justify-end">
+      <div className="mt-4 flex justify-end">
         <a
           href="#top"
           className="text-[12.5px] text-muted-foreground transition-colors hover:text-foreground"
@@ -16,9 +16,12 @@ export function Footer() {
         </a>
       </div>
 
-      <div className="mt-2">
+      <div className="mt-1">
         <WorkspaceScene />
       </div>
+      <p className="mt-2 text-right font-mono text-[10px] text-muted-foreground">
+        © {new Date().getFullYear()} Akshath P.
+      </p>
     </footer>
   );
 }

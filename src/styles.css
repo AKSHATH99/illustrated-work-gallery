@@ -55,6 +55,36 @@
   --landscape-deep: color-mix(in oklab, var(--foreground) 16%, var(--background));
   --landscape-stone: color-mix(in oklab, var(--foreground) 30%, var(--background));
   --landscape-background: var(--background);
+  --landscape-sky: oklch(27% 0.055 153);
+  --landscape-star: oklch(82% 0.035 135);
+  --landscape-star-bright: oklch(94% 0.035 100);
+  --landscape-moon: oklch(94% 0.035 100);
+  --landscape-cloud: oklch(22% 0.045 155);
+  --landscape-hill-back: oklch(25% 0.06 153);
+  --landscape-hill: oklch(29% 0.07 152);
+  --landscape-hill-light: oklch(34% 0.08 151);
+  --landscape-path: oklch(32% 0.05 135);
+  --landscape-wood: oklch(22% 0.045 150);
+  --landscape-window: oklch(82% 0.16 88);
+  --landscape-foliage: oklch(31% 0.09 151);
+  --landscape-foliage-shade: oklch(24% 0.075 151);
+  --landscape-foliage-light: oklch(46% 0.09 150);
+  --landscape-bark: oklch(20% 0.04 150);
+  --landscape-pine: oklch(24% 0.08 152);
+  --landscape-bush: oklch(36% 0.085 150);
+  --landscape-bush-shade: oklch(25% 0.075 150);
+  --landscape-roof: oklch(30% 0.075 154);
+  --landscape-door: oklch(18% 0.035 150);
+  --landscape-smoke: oklch(38% 0.025 150);
+  --landscape-ground-light: oklch(50% 0.09 150);
+  --landscape-meadow: oklch(39% 0.095 150);
+  --landscape-meadow-light: oklch(55% 0.105 148);
+  --landscape-soil: oklch(20% 0.045 150);
+  --landscape-soil-light: oklch(24% 0.05 150);
+  --landscape-flower-gold: oklch(77% 0.14 87);
+  --landscape-flower-red: oklch(65% 0.13 25);
+  --landscape-flower-lilac: oklch(70% 0.08 300);
+  --landscape-mushroom: oklch(73% 0.08 42);
 }
 
 .dark,
@@ -71,6 +101,36 @@
   --landscape-deep: color-mix(in oklab, var(--foreground) 16%, var(--background));
   --landscape-stone: color-mix(in oklab, var(--foreground) 30%, var(--background));
   --landscape-background: var(--background);
+  --landscape-sky: oklch(24% 0.04 153);
+  --landscape-star: oklch(78% 0.025 135);
+  --landscape-star-bright: oklch(93% 0.025 100);
+  --landscape-moon: oklch(93% 0.025 100);
+  --landscape-cloud: oklch(20% 0.035 155);
+  --landscape-hill-back: oklch(22% 0.045 153);
+  --landscape-hill: oklch(26% 0.055 152);
+  --landscape-hill-light: oklch(31% 0.065 151);
+  --landscape-path: oklch(29% 0.04 135);
+  --landscape-wood: oklch(19% 0.035 150);
+  --landscape-window: oklch(80% 0.16 88);
+  --landscape-foliage: oklch(28% 0.075 151);
+  --landscape-foliage-shade: oklch(21% 0.06 151);
+  --landscape-foliage-light: oklch(43% 0.075 150);
+  --landscape-bark: oklch(18% 0.03 150);
+  --landscape-pine: oklch(21% 0.065 152);
+  --landscape-bush: oklch(33% 0.07 150);
+  --landscape-bush-shade: oklch(22% 0.06 150);
+  --landscape-roof: oklch(27% 0.06 154);
+  --landscape-door: oklch(16% 0.025 150);
+  --landscape-smoke: oklch(34% 0.02 150);
+  --landscape-ground-light: oklch(46% 0.075 150);
+  --landscape-meadow: oklch(35% 0.08 150);
+  --landscape-meadow-light: oklch(50% 0.09 148);
+  --landscape-soil: oklch(18% 0.035 150);
+  --landscape-soil-light: oklch(22% 0.04 150);
+  --landscape-flower-gold: oklch(75% 0.13 87);
+  --landscape-flower-red: oklch(63% 0.12 25);
+  --landscape-flower-lilac: oklch(68% 0.075 300);
+  --landscape-mushroom: oklch(70% 0.07 42);
 }
 
 @layer base {
@@ -338,12 +398,24 @@
   height: auto;
 }
 
+.workspace-scene-bleed {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+}
+
 .workspace-scene-wide {
-  width: min(100%, calc(var(--companion-size) * 28.75));
+  width: calc(100vw - 232px);
+  max-width: 100%;
+}
+
+.workspace-scene-wide > svg {
+  height: clamp(280px, 30vw, 380px);
 }
 
 .workspace-scene-narrow {
-  width: min(100%, calc(var(--companion-size) * 13.75));
+  width: 100vw;
 }
 
 .workspace-scene-seat {

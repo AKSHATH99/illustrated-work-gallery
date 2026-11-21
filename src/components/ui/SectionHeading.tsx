@@ -9,7 +9,7 @@ interface SectionHeadingProps {
 
 export function SectionHeading({ title, intro, icon: Icon }: SectionHeadingProps) {
   return (
-    <div className="mb-8 md:mb-10">
+    <div className="mb-8 md:mb-10" data-scroll-reveal>
       <div className="flex items-center gap-3">
         {Icon ? (
           <span

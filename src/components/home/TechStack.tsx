@@ -20,11 +20,12 @@ export function TechStack() {
             >
               {group.title}
             </h3>
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-wrap gap-2" data-scroll-reveal-stagger>
               {group.items.map((item) => (
                 <li
                   key={item}
                   className="rounded-md border border-border px-2.5 py-1 text-[13px] text-foreground"
+                  data-scroll-reveal
                 >
                   {item}
                 </li>

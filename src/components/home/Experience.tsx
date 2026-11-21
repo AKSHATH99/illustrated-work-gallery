@@ -54,7 +54,7 @@ export function Experience() {
       {/* The line is drawn entry by entry so it ends at the last marker instead
           of trailing off under the final role. The gutter left of the line is
           the character's standing room, so it never covers a marker. */}
-      <ol ref={listRef} className="ml-[22px] lg:ml-0">
+      <ol ref={listRef} className="ml-[22px] lg:ml-0" data-scroll-reveal-stagger>
         {experience.map((entry, index) => {
           const isLast = index === experience.length - 1;
           const isActive = index === focused;
@@ -78,7 +78,8 @@ export function Experience() {
                   isActive ? "border-accent" : "border-muted-foreground/40"
                 }`}
               />
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <div data-scroll-reveal>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                 <h3 className="text-[15px] font-medium tracking-tight text-foreground">
                   {entry.role}
                   {entry.company ? (
@@ -110,6 +111,7 @@ export function Experience() {
                   ))}
                 </ul>
               ) : null}
+              </div>
             </li>
           );
         })}

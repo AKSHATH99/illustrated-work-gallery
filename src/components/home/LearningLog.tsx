@@ -65,7 +65,7 @@ function Entries({ topic }: { topic: LearningTopic }) {
         return (
           <div key={group.label}>
             <h4 className="font-mono text-[10.5px] text-muted-foreground/70">{group.label}</h4>
-            <ul className="spotlight mt-2 space-y-2.5">
+            <ul className="spotlight mt-2 space-y-2.5" data-scroll-reveal-stagger>
               {entries.map((entry) => (
                 <EntryRow
                   key={entry.kind + ":" + ("title" in entry ? entry.title : entry.body)}
@@ -84,7 +84,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
   switch (entry.kind) {
     case "post":
       return (
-        <li className="spotlight-item">
+        <li className="spotlight-item" data-scroll-reveal>
           <EntryLink href={entry.url} className="group flex items-start gap-4">
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-1.5">
@@ -129,7 +129,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "note":
       return (
-        <li className="spotlight-item group">
+        <li className="spotlight-item group" data-scroll-reveal>
           <div className="flex flex-wrap items-baseline justify-between gap-x-3">
             <h5 className="text-[13.5px] font-medium text-foreground">
               {entry.url ? (
@@ -160,7 +160,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "update":
       return (
-        <li className="spotlight-item flex items-start gap-2.5 text-[13px] leading-relaxed text-muted-foreground transition-colors hover:text-foreground/85">
+        <li className="spotlight-item flex items-start gap-2.5 text-[13px] leading-relaxed text-muted-foreground transition-colors hover:text-foreground/85" data-scroll-reveal>
           <span
             aria-hidden="true"
             className="mt-[8px] h-px w-2.5 shrink-0 bg-muted-foreground/35"
@@ -176,7 +176,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "resource":
       return (
-        <li className="spotlight-item group">
+        <li className="spotlight-item group" data-scroll-reveal>
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <EntryLink
               href={entry.url}
@@ -200,7 +200,7 @@ function EntryRow({ entry }: { entry: LearningEntry }) {
 
     case "project":
       return (
-        <li className="spotlight-item group">
+        <li className="spotlight-item group" data-scroll-reveal>
           <h5 className="text-[13.5px] font-medium text-foreground">{entry.title}</h5>
           {entry.description ? (
             <p className="mt-0.5 max-w-[560px] text-[13px] leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
@@ -260,7 +260,7 @@ function TopicGroup({ topic, defaultOpen }: { topic: LearningTopic; defaultOpen:
           <Icon size={15} />
         </span>
 
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1" data-scroll-reveal>
           <h3 className="text-[15px] font-medium tracking-tight text-foreground transition-colors duration-300 group-hover/topic:text-accent">
             {hasEntries ? (
               <button
@@ -299,7 +299,7 @@ function TopicGroup({ topic, defaultOpen }: { topic: LearningTopic; defaultOpen:
       </div>
 
       {hasEntries ? (
-        <div id={panelId} hidden={!open}>
+        <div id={panelId} hidden={!open} data-scroll-reveal="fade">
           <Entries topic={topic} />
         </div>
       ) : null}
@@ -318,7 +318,7 @@ export function LearningLog() {
         intro="Some things I'm learning take a few days to figure out; others turn into projects or notes worth sharing. Here's where I keep track of it all."
       />
 
-      <ul className="spotlight">
+      <ul className="spotlight" data-scroll-reveal-stagger>
         {learningTopics.map((topic) => (
           <TopicGroup key={topic.id} topic={topic} defaultOpen={topic.defaultOpen ?? true} />
         ))}

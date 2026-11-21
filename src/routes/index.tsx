@@ -6,6 +6,7 @@ import { Experience } from "@/components/home/Experience";
 import { TechStack } from "@/components/home/TechStack";
 import { LearningLog } from "@/components/home/LearningLog";
 import { FindMe } from "@/components/home/FindMe";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +31,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  useScrollReveal();
+
   return (
     <SiteShell>
       <Intro />

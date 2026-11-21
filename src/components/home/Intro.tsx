@@ -9,7 +9,7 @@ export function Intro() {
   return (
     <section id="home" className="scroll-mt-24 pb-14 pt-2 md:pb-16 md:pt-4">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-10">
-        <div className="max-w-[580px]">
+        <div className="max-w-[580px]" data-scroll-reveal>
           <p className="text-[14px] text-muted-foreground">Hey, I'm Akshath.</p>
           <h1 className="mt-3 text-[30px] font-semibold leading-[1.18] tracking-tight text-foreground md:text-[36px]">
             I build software, explore ML, and learn by making things.
@@ -41,7 +41,7 @@ export function Intro() {
           </div>
         </div>
 
-        <div className="mt-10 w-fit shrink-0 md:mt-0 md:pt-14">
+        <div className="mt-10 w-fit shrink-0 md:mt-0 md:pt-14" data-scroll-reveal="fade">
           <HeroIllustration />
           <p className="mt-3 text-right font-mono text-[11px] text-muted-foreground/80">
             somewhere between code &amp; curiosity

@@ -79,6 +79,7 @@ export function FindMe() {
               target={url.startsWith("mailto:") ? undefined : "_blank"}
               rel="noreferrer"
               data-companion-anchor="social-card"
+              data-scroll-reveal="fade"
               className="spotlight-item group flex items-center gap-4 rounded-lg border border-border p-4 hover:-translate-y-0.5 hover:border-accent/50"
             >
               <span
@@ -111,7 +112,7 @@ export function FindMe() {
           ))}
         </div>
       ) : (
-        <p className="text-[14px] text-muted-foreground">
+        <p className="text-[14px] text-muted-foreground" data-scroll-reveal>
           My links are being set up here — check back soon.
         </p>
       )}

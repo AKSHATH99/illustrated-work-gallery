@@ -25,7 +25,12 @@ export function ProjectCard({ project }: { project: Project }) {
   }, []);
 
   return (
-    <div className={cardClass} data-companion-anchor="project-card" onPointerMove={trackPointer}>
+    <div
+      className={cardClass}
+      data-companion-anchor="project-card"
+      data-scroll-reveal="fade"
+      onPointerMove={trackPointer}
+    >
       {thumbnail ? (
         <div className="relative overflow-hidden">
           <img
